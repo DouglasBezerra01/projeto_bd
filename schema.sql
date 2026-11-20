@@ -78,7 +78,8 @@ CREATE TABLE PACIENTES (
     sexo VARCHAR(20),
     nome_mae VARCHAR(100),
     endereco VARCHAR(200),
-    telefone VARCHAR(20)
+    telefone VARCHAR(20),
+    nome_responsavel VARCHAR(100)
 );
 
 -- 10. Tabela PRONTUARIO
@@ -155,7 +156,9 @@ CREATE TABLE AGENDAMENTO (
     numero_sala INTEGER,
     matricula_administracao INTEGER,
     FOREIGN KEY (numero_sala) REFERENCES SALAS (numero_sala),
-    FOREIGN KEY (matricula_administracao) REFERENCES ADMINISTRACAO (matricula_profissionais)
+    FOREIGN KEY (matricula_administracao) REFERENCES ADMINISTRACAO (matricula_profissionais),
+    FOREIGN KEY (cpf_paciente) REFERENCES PACIENTES (cpf),
+    FOREIGN KEY (matricula_medico) REFERENCES MEDICO (matricula_profissionais)
 );
 
 -- 17. Tabela ATENDIMENTO
@@ -188,6 +191,7 @@ CREATE TABLE SOLICITA (
     data_solicitacao DATE,
     indicacao_clinica TEXT,
     carater VARCHAR(50),
+    status_exame VARCHAR(20) DEFAULT 'Solicitado',
     PRIMARY KEY (id_atendimento, codigo_TUSS_procedimento),
     FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
     FOREIGN KEY (codigo_TUSS_procedimento) REFERENCES PROCEDIMENTO_EXAME (codigo_TUSS)
