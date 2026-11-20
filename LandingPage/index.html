@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clínica | Consulta de dados</title>
+  <title>Clínica | Consulta interna</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
         <div class="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 3v18M3 12h18"/></svg>
         </div>
-        Clínica
+        Gestão interna
       </div>
       <div class="nav-links">
         <a href="#inicio">Início</a>
@@ -23,58 +23,76 @@
 
   <main id="inicio">
     <section class="hero">
-      <div class="eyebrow">Cuidado integrado</div>
-      <h1>Como podemos ajudar?</h1>
-      <p class="subtitle">Pesquise por especialidade, profissional, unidade ou procedimento e encontre rapidamente o atendimento ideal.</p>
+      <div class="eyebrow">Uso interno da empresa</div>
+      <h1>Consulta de dados</h1>
+      <p class="subtitle">Pesquise nos registros e abra Filtros para escolher os campos e categorias que deseja exibir.</p>
 
       <form class="search-shell" id="searchForm">
         <label class="search-input-wrap" for="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-          <input id="search" type="search" autocomplete="off" placeholder="Ex.: cardiologia, Dra. Mariana ou Recife">
+          <input id="search" type="search" autocomplete="off" placeholder="Pesquise por um valor: Mariana, CPF, Recife, CRM...">
         </label>
+        <button id="filterToggle" class="filter-toggle" type="button" aria-expanded="false" aria-controls="filtersPanel" aria-label="Abrir filtros">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6.5 7.5V19l-3 1v-7.5L4 5z"/></svg>
+          <span>Filtros</span>
+        </button>
         <button id="searchButton" type="submit">Buscar</button>
       </form>
 
-      <div class="filter-bar" aria-label="Filtros de busca">
-        <label for="categoryFilter">Filtrar por:</label>
-        <select id="categoryFilter">
-          <option value="Todos">Todos</option>
-          <option value="Q01">Médicos</option>
-          <option value="Q02">Cancelamentos</option>
-          <option value="Q03">Procedimentos</option>
-          <option value="Paciente">Pacientes</option>
-          <option value="Unidade">Unidades</option>
-          <option value="Plano">Planos</option>
-          <option value="Agenda">Agendas</option>
-        </select>
-      </div>
-
-      <div class="quick-searches keyword-filter" aria-label="Palavras-chave frequentes">
-        <button type="button" data-category="Todos" data-query="">Todas</button>
-        <button type="button" data-category="Q01" data-query="médico CRM UF admissão">Médico</button>
-        <button type="button" data-category="Q02" data-query="cancelado outubro data hora">Cancelamento</button>
-        <button type="button" data-category="Q03" data-query="código TUSS preparo tempo">TUSS</button>
-        <button type="button" data-category="Paciente" data-query="paciente CPF prontuário CNS">Paciente</button>
-        <button type="button" data-category="Unidade" data-query="unidade endereço município telefone horário">Unidade</button>
-        <button type="button" data-category="Plano" data-query="plano operadora carência cobertura">Plano</button>
-        <button type="button" data-category="Agenda" data-query="agenda médico especialidade unidade horário">Agenda</button>
-        <button type="button" data-category="Todos" data-query="exame procedimento solicitação">Exames</button>
+      <div class="filters-panel" id="filtersPanel" aria-label="Filtros de dados" hidden>
+        <fieldset class="filter-group">
+          <legend>Campos para exibir</legend>
+          <div class="field-options" id="fieldOptions"></div>
+        </fieldset>
+        <fieldset class="filter-group">
+          <legend>Tipo de registro</legend>
+          <label><input type="checkbox" data-all-filter> Todos</label>
+          <label><input type="checkbox" value="Profissional" data-category-filter> Profissionais</label>
+          <label><input type="checkbox" value="Paciente" data-category-filter> Pacientes</label>
+          <label><input type="checkbox" value="Unidade" data-category-filter> Unidades</label>
+          <label><input type="checkbox" value="Procedimento" data-category-filter> Procedimentos</label>
+          <label><input type="checkbox" value="Agendamento" data-category-filter> Agendamentos</label>
+          <label><input type="checkbox" value="Atendimento" data-category-filter> Atendimentos</label>
+          <label><input type="checkbox" value="Agenda" data-category-filter> Agendas</label>
+          <label><input type="checkbox" value="Plano" data-category-filter> Planos</label>
+          <label><input type="checkbox" value="Operadora" data-category-filter> Operadoras</label>
+          <label><input type="checkbox" value="Evolução" data-category-filter> Evoluções</label>
+          <label><input type="checkbox" value="Especialidade" data-category-filter> Especialidades</label>
+          <label><input type="checkbox" value="Sala" data-category-filter> Salas</label>
+          <label><input type="checkbox" value="Medicamento" data-category-filter> Medicamentos</label>
+          <label><input type="checkbox" value="Prescrição" data-category-filter> Prescrições</label>
+          <label><input type="checkbox" value="Solicitação" data-category-filter> Solicitações</label>
+          <label><input type="checkbox" value="Prontuário" data-category-filter> Prontuários</label>
+          <label><input type="checkbox" value="Vínculo de plano" data-category-filter> Vínculos de plano</label>
+          <label><input type="checkbox" value="Especialidade médica" data-category-filter> Vínculos de especialidade</label>
+        </fieldset>
       </div>
     </section>
 
     <section id="results" aria-live="polite">
       <div class="results-heading">
-        <h2 id="resultsTitle">Opções disponíveis</h2>
+        <h2 id="resultsTitle">Todos os registros</h2>
         <span id="resultCount"></span>
       </div>
-      <div class="cards" id="cards"></div>
+      <div class="table-wrap">
+        <table class="results-table">
+          <thead>
+            <tr id="resultsHeadRow"></tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+        <div class="empty" id="emptyState">
+          <strong>Pesquise nos dados da empresa</strong>
+          <p>Pesquise por um nome, CPF, unidade, CRM, especialidade ou outro dado cadastrado.</p>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer>
     <div class="footer-inner">
       <span>© 2026 Clínica</span>
-      <span>Atendimento humanizado e integrado</span>
+      <span>Consulta para uso interno da empresa</span>
     </div>
   </footer>
 
@@ -85,29 +103,29 @@
     ];
 
     const profissionais = [
-      { matricula: 101, nome: 'Carlos Eduardo Silva', cpf: '111.111.111-11', vinculo: 'CLT', admissao: '2018-01-15', unidade: 1, setor: 'Recepção e Agendamento' },
-      { matricula: 102, nome: 'Dra. Mariana Costa', cpf: '222.222.222-22', vinculo: 'PJ', admissao: '2016-05-10', unidade: 1, crm: '12345-PE', especialidades: ['Cardiologia', 'Clínica Geral'] },
-      { matricula: 103, nome: 'Dr. Roberto Almeida', cpf: '333.333.333-33', vinculo: 'PJ', admissao: '2020-02-01', unidade: 2, crm: '67890-PE', especialidades: ['Ortopedia'] },
-      { matricula: 104, nome: 'Fernanda Lima', cpf: '444.444.444-44', vinculo: 'CLT', admissao: '2019-11-12', unidade: 1, funcao: 'Enfermeira', coren: '98765-ENF' },
-      { matricula: 105, nome: 'João Pedro Santos', cpf: '555.555.555-55', vinculo: 'CLT', admissao: '2021-06-20', unidade: 2, funcao: 'Técnico', registro: 'TEC-54321', area: 'Radiologia e Exames de Imagem' }
+      { matricula: 101, nome: 'Carlos Eduardo Silva', cpf: '111.111.111-11', nascimento: '1985-04-12', telefone: '(81) 99999-1111', email: 'carlos.silva@clinica.com', vinculo: 'CLT', admissao: '2018-01-15', unidade: 1, setor: 'Recepção e Agendamento' },
+      { matricula: 102, nome: 'Dra. Mariana Costa', cpf: '222.222.222-22', nascimento: '1980-09-25', telefone: '(81) 99999-2222', email: 'mariana.costa@clinica.com', vinculo: 'PJ', admissao: '2016-05-10', unidade: 1, crm: '12345-PE', ufRegistro: 'PE', especialidades: ['Cardiologia', 'Clínica Geral'] },
+      { matricula: 103, nome: 'Dr. Roberto Almeida', cpf: '333.333.333-33', nascimento: '1978-11-03', telefone: '(81) 99999-3333', email: 'roberto.almeida@clinica.com', vinculo: 'PJ', admissao: '2020-02-01', unidade: 2, crm: '67890-PE', ufRegistro: 'PE', especialidades: ['Ortopedia'] },
+      { matricula: 104, nome: 'Fernanda Lima', cpf: '444.444.444-44', nascimento: '1990-07-19', telefone: '(81) 99999-4444', email: 'fernanda.lima@clinica.com', vinculo: 'CLT', admissao: '2019-11-12', unidade: 1, funcao: 'Enfermeira', coren: '98765-ENF', ufRegistro: 'PE' },
+      { matricula: 105, nome: 'João Pedro Santos', cpf: '555.555.555-55', nascimento: '1995-02-28', telefone: '(81) 99999-5555', email: 'joao.santos@clinica.com', vinculo: 'CLT', admissao: '2021-06-20', unidade: 2, funcao: 'Técnico', registro: 'TEC-54321', area: 'Radiologia e Exames de Imagem' }
     ];
 
     const pacientes = [
-      { cpf: '777.777.777-77', nome: 'Ana Beatriz Souza', nascimento: '1992-06-15', municipio: 'Recife', cns: '700001112223334', prontuario: 1001, plano: 'Saúde Total Ouro', responsavel: 'não informado no banco' },
-      { cpf: '888.888.888-88', nome: 'Marcos Vinícius Oliveira', nascimento: '1975-12-08', municipio: 'Recife', cns: '700004445556667', prontuario: 1002, plano: 'Plano Básico Regional', responsavel: 'não informado no banco' },
-      { cpf: '999.999.999-99', nome: 'Juliana Mendes', nascimento: '2001-03-30', municipio: 'Recife', cns: '700007778889990', prontuario: 1003, plano: 'não informado', responsavel: 'não informado no banco' }
+      { cpf: '777.777.777-77', nome: 'Ana Beatriz Souza', nascimento: '1992-06-15', sexo: 'Feminino', nomeMae: 'Maria das Graças Souza', endereco: 'Rua do Sol, 120', telefone: '(81) 98888-1111', municipio: 'Recife', cns: '700001112223334', prontuario: 1001, plano: 'Saúde Total Ouro', carteirinha: 'CART-998877', inicioPlano: '2024-01-01', fimPlano: '2027-01-01', condicaoPlano: 'Ativo', responsavel: 'não informado no banco' },
+      { cpf: '888.888.888-88', nome: 'Marcos Vinícius Oliveira', nascimento: '1975-12-08', sexo: 'Masculino', nomeMae: 'Helena Oliveira', endereco: 'Av. Boa Vista, 890', telefone: '(81) 98888-2222', municipio: 'Recife', cns: '700004445556667', prontuario: 1002, plano: 'Plano Básico Regional', carteirinha: 'CART-112233', inicioPlano: '2023-05-15', fimPlano: '2026-12-31', condicaoPlano: 'Ativo', responsavel: 'não informado no banco' },
+      { cpf: '999.999.999-99', nome: 'Juliana Mendes', nascimento: '2001-03-30', sexo: 'Feminino', nomeMae: 'Cláudia Mendes', endereco: 'Rua da Aurora, 45', telefone: '(81) 98888-3333', municipio: 'Recife', cns: '700007778889990', prontuario: 1003, plano: 'não informado', carteirinha: '', inicioPlano: '', fimPlano: '', condicaoPlano: '', responsavel: 'não informado no banco' }
     ];
 
     const procedimentos = [
-      { codigo: '40101010', nome: 'Eletrocardiograma (ECG)', tipo: 'Exame Cardiológico', preparo: 'Não usar cremes no tórax no dia do exame.', tempo: '00:20:00', solicitado: 901, data: '2026-11-10', especialidade: 'Cardiologia' },
-      { codigo: '40805018', nome: 'Radiografia de Joelho Direito', tipo: 'Exame de Imagem', preparo: 'Remover objetos metálicos da região.', tempo: '00:15:00', solicitado: 902, data: '2026-11-12', especialidade: 'Ortopedia' },
-      { codigo: '40101029', nome: 'Teste Ergométrico', tipo: 'Exame Cardiológico', preparo: 'Usar roupas leves e tênis; evitar cafeína 3h antes.', tempo: '00:40:00', solicitado: null, especialidade: 'Cardiologia' }
+      { codigo: '40101010', nome: 'Eletrocardiograma (ECG)', tipo: 'Exame Cardiológico', preparo: 'Não usar cremes no tórax no dia do exame.', tempo: '00:20:00', solicitado: 901, data: '2026-11-10', especialidade: 'Cardiologia', indicacao: 'Investigação de palpitações', carater: 'Eletivo', examePrincipal: '' },
+      { codigo: '40805018', nome: 'Radiografia de Joelho Direito', tipo: 'Exame de Imagem', preparo: 'Remover objetos metálicos da região.', tempo: '00:15:00', solicitado: 902, data: '2026-11-12', especialidade: 'Ortopedia', indicacao: 'Avaliação de dor articular pós-esforço', carater: 'Urgência', examePrincipal: '' },
+      { codigo: '40101029', nome: 'Teste Ergométrico', tipo: 'Exame Cardiológico', preparo: 'Usar roupas leves e tênis; evitar cafeína 3h antes.', tempo: '00:40:00', solicitado: null, especialidade: 'Cardiologia', indicacao: '', carater: '', examePrincipal: '40101010' }
     ];
 
     const agendamentos = [
-      { id: 501, data: '2026-11-10', hora: '09:00', canal: 'WhatsApp', pagamento: 'Convênio', situacao: 'Realizado', sala: 1 },
-      { id: 502, data: '2026-11-12', hora: '10:30', canal: 'Presencial', pagamento: 'Convênio', situacao: 'Realizado', sala: 1 },
-      { id: 503, data: '2026-11-15', hora: '14:00', canal: 'Telefone', pagamento: 'Particular', situacao: 'Cancelado', cancelamento: '2026-11-14', motivo: 'Imprevisto pessoal do paciente', sala: 2 }
+      { id: 501, data: '2026-11-10', hora: '09:00', canal: 'WhatsApp', pagamento: 'Convênio', situacao: 'Realizado', cancelamento: '', motivo: '', sala: 1, administracao: 101 },
+      { id: 502, data: '2026-11-12', hora: '10:30', canal: 'Presencial', pagamento: 'Convênio', situacao: 'Realizado', cancelamento: '', motivo: '', sala: 1, administracao: 101 },
+      { id: 503, data: '2026-11-15', hora: '14:00', canal: 'Telefone', pagamento: 'Particular', situacao: 'Cancelado', cancelamento: '2026-11-14', motivo: 'Imprevisto pessoal do paciente', sala: 2, administracao: 101 }
     ];
 
     const agendas = [
@@ -127,253 +145,448 @@
     ];
 
     const evolucoes = [
-      { prontuario: 1001, profissional: 104, data: '2026-11-10', retorno: null, texto: 'Paciente relata leve cansaço aos esforços. Sinais vitais estáveis.' },
-      { prontuario: 1002, profissional: 102, data: '2026-11-12', retorno: null, texto: 'Paciente hipertenso em acompanhamento regular.' }
+      { prontuario: 1001, profissional: 104, dataHora: '2026-11-10 08:30:00', peso: 62.50, altura: 1.65, frequenciaCardiaca: 76, temperatura: 36.50, pressao: '120/80', texto: 'Paciente relata leve cansaço aos esforços. Sinais vitais estáveis.' },
+      { prontuario: 1002, profissional: 102, dataHora: '2026-11-12 10:15:00', peso: 84.00, altura: 1.78, frequenciaCardiaca: 82, temperatura: 36.80, pressao: '140/90', texto: 'Paciente hipertenso em acompanhamento regular. Orientado sobre dieta hipossódica.' }
     ];
 
     const atendimentos = [
-      { id: 901, agendamento: 501, inicio: '09:05', termino: '09:35', cid: 'R00.2 - Palpitações', retorno: 30, especialidade: 'Cardiologia' },
-      { id: 902, agendamento: 502, inicio: '10:32', termino: '11:00', cid: 'M25.5 - Dor articular', retorno: 15, especialidade: 'Ortopedia' }
+      { id: 901, agendamento: 501, inicio: '09:05', termino: '09:35', queixa: 'Fadiga e palpitações ocasionais', cid: 'R00.2 - Palpitações', conduta: 'Solicitado eletrocardiograma e exames laboratoriais de rotina.', retorno: 30, especialidade: 'Cardiologia' },
+      { id: 902, agendamento: 502, inicio: '10:32', termino: '11:00', queixa: 'Dor no joelho direito após caminhada', cid: 'M25.5 - Dor articular', conduta: 'Prescrito anti-inflamatório e solicitado raio-X.', retorno: 15, especialidade: 'Ortopedia' }
+    ];
+
+    const especialidades = [
+      { codigo: 1, nome: 'Cardiologia', conselho: 'CRM' },
+      { codigo: 2, nome: 'Clínica Geral', conselho: 'CRM' },
+      { codigo: 3, nome: 'Ortopedia', conselho: 'CRM' }
+    ];
+
+    const salas = [
+      { numero: 1, capacidade: 3, equipamento: 'Maca, Estetoscópio, Esfigmomanômetro, Computador' },
+      { numero: 2, capacidade: 4, equipamento: 'Maca ortopédica, Negatoscópio, Computador' },
+      { numero: 3, capacidade: 2, equipamento: 'Aparelho de Eletrocardiograma, Maca' }
+    ];
+
+    const medicamentos = [
+      { codigo: 301, principioAtivo: 'Losartana Potássica', nomeComercial: 'Aradois', apresentacao: 'Comprimido', concentracao: '50mg', tarja: 'Tarja Vermelha' },
+      { codigo: 302, principioAtivo: 'Ibuprofeno', nomeComercial: 'Alivium', apresentacao: 'Comprimido revestido', concentracao: '600mg', tarja: 'Sem Tarja' },
+      { codigo: 303, principioAtivo: 'Dipirona Monoidratada', nomeComercial: 'Novalgina', apresentacao: 'Solução Oral', concentracao: '500mg/mL', tarja: 'Sem Tarja' }
+    ];
+
+    const prescricoes = [
+      { atendimento: 901, medicamento: 301, sequencia: 1, quantidade: 30, posologia: 'Tomar 1 comprimido pela manhã em jejum', duracao: '30 dias', via: 'Oral' },
+      { atendimento: 902, medicamento: 302, sequencia: 1, quantidade: 15, posologia: 'Tomar 1 comprimido de 8 em 8 horas após as refeições', duracao: '5 dias', via: 'Oral' },
+      { atendimento: 902, medicamento: 303, sequencia: 2, quantidade: 1, posologia: 'Tomar 30 gotas em caso de dor', duracao: 'Se necessário', via: 'Oral' }
     ];
 
     const form = document.getElementById('searchForm');
     const input = document.getElementById('search');
-    const cards = document.getElementById('cards');
+    const resultsBody = document.getElementById('resultsBody');
+    const resultsHeadRow = document.getElementById('resultsHeadRow');
+    const emptyState = document.getElementById('emptyState');
     const resultCount = document.getElementById('resultCount');
     const resultsTitle = document.getElementById('resultsTitle');
-    const categoryFilter = document.getElementById('categoryFilter');
+    const fieldOptions = document.getElementById('fieldOptions');
+    const filterToggle = document.getElementById('filterToggle');
+    const filtersPanel = document.getElementById('filtersPanel');
+    const allFilter = document.querySelector('[data-all-filter]');
+    let fieldFilters = [];
+    const categoryFilters = [...document.querySelectorAll('[data-category-filter]')];
 
     function normalize(value) {
       return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    }
+
+    function normalizeSearch(value) {
+      return normalize(value).replace(/[^a-z0-9]+/g, ' ').trim();
     }
 
     function unidadePorCodigo(codigo) {
       return unidades.find(unidade => unidade.codigo === codigo);
     }
 
-    function render(results, query = '', question = '') {
-      cards.innerHTML = '';
+    const columnOrder = [
+      'Nome', 'CPF', 'CRM', 'Matrícula', 'Cargo/área', 'Vínculo', 'Unidade', 'Especialidades',
+      'COREN', 'UF de registro', 'Registro profissional', 'Área de atuação', 'Setor',
+      'Data de admissão', 'Data de nascimento', 'E-mail', 'Prontuário', 'CNS', 'Sexo',
+      'Nome da mãe', 'Endereço', 'Município', 'Telefone', 'Plano', 'TUSS', 'Tipo', 'Preparo',
+      'Tempo estimado', 'ID agendamento', 'ID atendimento', 'Data', 'Hora', 'Canal',
+      'Forma de pagamento', 'Situação', 'Sala', 'Motivo do cancelamento', 'Hora início',
+      'Hora término', 'CID', 'Prazo de retorno', 'Dia da semana', 'Horário de início',
+      'Horário de término', 'Horário de funcionamento', 'Data de inauguração', 'Vigência',
+      'Duração da consulta', 'Código', 'Código da unidade', 'Acomodação', 'Abrangência',
+      'Carência', 'CNPJ', 'Registro ANS', 'Contato', 'Detalhes', 'Informações'
+    ];
+
+    const fieldLabels = {
+      'Município': 'Cidade / Município',
+      'TUSS': 'Código TUSS',
+      'Especialidades': 'Especialidade(s)',
+      'UF de registro': 'UF de registro',
+      'Data de admissão': 'Data de admissão',
+      'Data de nascimento': 'Data de nascimento'
+    };
+
+    function hasValue(value) {
+      return value !== null && value !== undefined && String(value).trim() !== '';
+    }
+
+    function orderedFields(sourceRecords) {
+      const fields = [...new Set(sourceRecords.flatMap(record => Object.keys(record.data)))]
+        .filter(field => sourceRecords.some(record => hasValue(record.data[field])));
+      return [
+        ...columnOrder.filter(field => fields.includes(field)),
+        ...fields.filter(field => !columnOrder.includes(field))
+      ];
+    }
+
+    function buildFieldFilters() {
+      const fields = orderedFields(records).filter(field => field !== 'Detalhes' && field !== 'Informações');
+      fieldOptions.replaceChildren();
+
+      fields.forEach(field => {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = field;
+        checkbox.dataset.fieldFilter = '';
+        label.append(checkbox, document.createTextNode(` ${fieldLabels[field] || field}`));
+        fieldOptions.appendChild(label);
+      });
+
+      fieldFilters = [...fieldOptions.querySelectorAll('[data-field-filter]')];
+    }
+
+    function render(results, query = '') {
+      resultsBody.replaceChildren();
+      resultsHeadRow.replaceChildren();
       resultCount.textContent = `${results.length} ${results.length === 1 ? 'resultado' : 'resultados'}`;
-      resultsTitle.textContent = question || (query ? `Resultados para “${query}”` : 'Opções disponíveis');
+      const selectedCategoryFilters = categoryFilters.filter(filter => filter.checked);
+      const selectedCategories = selectedCategoryFilters.map(filter => filter.value);
+      const selectedCategoryLabels = selectedCategoryFilters.map(filter => filter.parentElement.textContent.trim());
+      const selectedFields = fieldFilters.filter(filter => filter.checked).map(filter => filter.value);
+      resultsTitle.textContent = query
+        ? `Resultados para “${query}”`
+        : selectedCategories.length
+          ? selectedCategoryLabels.join(', ')
+          : selectedFields.length
+            ? `Campos selecionados: ${selectedFields.join(', ')}`
+            : 'Todos os registros';
 
       if (!results.length) {
-        cards.innerHTML = '<div class="empty"><strong>Nenhum resultado encontrado.</strong><p>Tente pesquisar por outra especialidade, unidade ou profissional.</p></div>';
+        emptyState.hidden = false;
+        const hasActiveFilters = fieldFilters.some(filter => filter.checked) || categoryFilters.some(filter => filter.checked);
+        if (query || hasActiveFilters) {
+          emptyState.innerHTML = '<strong>Nenhum registro encontrado.</strong><p>Altere a pesquisa ou os campos selecionados.</p>';
+        }
         return;
       }
 
+      emptyState.hidden = true;
+      const selectedRecords = selectedCategories.length
+        ? records.filter(record => selectedCategories.includes(record.type))
+        : results;
+      let columns = selectedFields;
+
+      if (!columns.length) {
+        columns = orderedFields(selectedRecords).filter(column => column !== 'Categoria');
+        if (selectedCategories.length !== 1) columns.unshift('Categoria');
+      }
+
+      columns.forEach(column => {
+        const header = document.createElement('th');
+        header.scope = 'col';
+        header.textContent = fieldLabels[column] || column;
+        resultsHeadRow.appendChild(header);
+      });
+
       results.forEach(item => {
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.innerHTML = `<span class="card-tag">${item.type}</span><h3>${item.title}</h3><p><strong>${item.detail}</strong></p><p>${item.meta}</p>`;
-        cards.appendChild(card);
+        const row = document.createElement('tr');
+        columns.forEach(column => {
+          const cell = document.createElement('td');
+          const value = column === 'Categoria' ? item.type : item.data[column];
+          cell.textContent = hasValue(value) ? value : '—';
+          if (column === 'Nome') cell.className = 'name-cell';
+          row.appendChild(cell);
+        });
+        resultsBody.appendChild(row);
       });
     }
 
-    function answer(query) {
-      const q = normalize(query);
-      const questionNumber = q.match(/\bq0?(1|2|3|4|5|6|7|8|9|10|11|12|13|14)\b/);
-      const n = questionNumber ? Number(questionNumber[1]) : null;
-
-      if (n === 1 || /nome.*crm.*uf.*admissao|medicos.*vinculo|profissionais.*alfabetica/.test(q)) {
-        const results = profissionais.filter(p => p.crm).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map(p => ({
-          type: 'Q01 • Médico', title: p.nome, detail: `CRM ${p.crm} • Unidade ${p.unidade}`, meta: `UF PE • Data de admissão: ${p.admissao} • Vinculo: ${p.vinculo}`
-        }));
-        render(results, query, 'Q01 — Médicos em ordem alfabética'); return;
-      }
-
-      if (n === 2 || /agendamento.*cancelad|cancelad.*outubro|outubro.*2026/.test(q)) {
-        const results = agendamentos.filter(a => a.situacao === 'Cancelado' && a.data.startsWith('2026-10')).map(a => ({
-          type: 'Q02 • Cancelamento', title: `Agendamento ${a.id}`, detail: `Data: ${a.data} • Hora: ${a.hora}`, meta: `Cancelado em ${a.cancelamento} • Motivo: ${a.motivo}`
-        }));
-        if (!results.length) results.push({ type: 'Q02 • Resultado', title: 'Nenhum cancelamento em outubro de 2026', detail: 'No conjunto de dados atual', meta: 'Os dados cadastrados possuem cancelamento apenas em novembro de 2026.' });
-        render(results, query, 'Q02 — Agendamentos cancelados em outubro de 2026'); return;
-      }
-
-      if (n === 3 || /codigo tuss|preparo.*tempo|procedimento.*tuss/.test(q)) {
-        const results = procedimentos.map(p => ({ type: 'Q03 • Procedimento', title: p.nome, detail: `TUSS ${p.codigo} • ${p.tipo}`, meta: `Preparo: ${p.preparo} • Tempo estimado: ${p.tempo}` }));
-        render(results, query, 'Q03 — Dados dos procedimentos cadastrados'); return;
-      }
-
-      if (n === 4 || /pacientes.*2010|nasc.*2010|mais novo.*mais velho/.test(q)) {
-        const nascidos2010 = pacientes.filter(p => p.nascimento.startsWith('2010'));
-        const maisNovo = [...pacientes].sort((a, b) => b.nascimento.localeCompare(a.nascimento))[0];
-        const maisVelho = [...pacientes].sort((a, b) => a.nascimento.localeCompare(b.nascimento))[0];
-        const results = [{ type: 'Q04 • Comparação', title: 'Nenhum paciente nasceu a partir de 2010', detail: 'Resultado da busca', meta: 'Os nascimentos cadastrados vão de 1975 a 2001.' }, { type: 'Q04 • Mais novo', title: maisNovo.nome, detail: `Nascimento: ${maisNovo.nascimento}`, meta: `Prontuário ${maisNovo.prontuario} • Município: ${maisNovo.municipio}` }, { type: 'Q04 • Mais velho', title: maisVelho.nome, detail: `Nascimento: ${maisVelho.nascimento}`, meta: `Prontuário ${maisVelho.prontuario}` }];
-        render(results, query, 'Q04 — Pacientes que nasceram a partir de 2010'); return;
-      }
-
-      if (n === 5 || /total.*absenteismo|agendamento.*faltou|faltou.*mes/.test(q)) {
-        render([{ type: 'Q05 • Informação', title: 'Não é possível calcular faltas', detail: 'O campo “faltou” não existe no banco', meta: 'A tabela AGENDAMENTO possui situação e cancelamento, mas nenhum registro de ausência pode ser identificado.' }], query, 'Q05 — Absenteísmo mensal dos médicos'); return;
-      }
-
-      if (n === 6 || /medicos.*especialidade|especialidade.*unidade|faixa de agenda|horario.*especialidade/.test(q)) {
-        const results = profissionais.filter(p => p.crm).flatMap(p => p.especialidades.map(especialidade => {
-          const horario = agendas.find(a => a.crm === p.crm);
-          const unidade = unidadePorCodigo(p.unidade);
-          return { type: 'Q06 • Agenda', title: `${p.nome} — ${especialidade}`, detail: unidade.nome, meta: `${horario.dia}: ${horario.inicio} às ${horario.fim} • Vigência até ${horario.vigencia}` };
-        }));
-        render(results, query, 'Q06 — Médicos por especialidade, unidade e agenda'); return;
-      }
-
-      if (n === 7 || /responsavel.*cadastro|pacientes.*responsavel/.test(q)) {
-        const results = pacientes.map(p => ({ type: 'Q07 • Cadastro', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Responsável pelo cadastro: ${p.responsavel}` }));
-        render(results, query, 'Q07 — Pacientes e responsáveis pelo cadastro'); return;
-      }
-
-      if (n === 8 || /operador.*competencia|valor.*pago|glosa|valor apresentado/.test(q)) {
-        render([{ type: 'Q08 • Não cadastrado', title: 'Competência, pagamento e glosa não estão disponíveis', detail: 'Os dados apresentados não possuem operadores associados', meta: 'POSSUI_PLANO relaciona paciente e plano, mas não registra operador, competência, valores pago/apresentado ou glosa.' }], query, 'Q08 — Operadora e competência financeira'); return;
-      }
-
-      if (n === 9 || /operadora.*competencia|operador.*procedimento|quantidade.*procedimento/.test(q)) {
-        render([{ type: 'Q09 • Sem relacionamento', title: 'Não é possível ligar operador ao procedimento', detail: 'Não existe vínculo OPERADORES → procedimento/plano', meta: 'O banco possui operadores e solicitações separadamente, sem chave que associe um operador a uma competência.' }], query, 'Q09 — Operadores e procedimentos'); return;
-      }
-
-      if (n === 10 || /tempo medio.*especialidade|tempo.*marcacao.*consulta/.test(q)) {
-        render([{ type: 'Q10 • Não calculável', title: 'Tempo médio entre marcação e consulta', detail: 'A tabela não associa prontuário ao agendamento', meta: 'Não há data de marcação nem ligação individual entre paciente, especialidade e consulta para o cálculo.' }], query, 'Q10 — Tempo médio por especialidade'); return;
-      }
-
-      if (n === 11 || /exame.*solicitad|nunca.*realizad|quantidade.*especialidade.*solicitante/.test(q)) {
-        const results = procedimentos.map(p => ({ type: 'Q11 • Solicitação', title: p.nome, detail: p.solicitado ? `Solicitado no atendimento ${p.solicitado}` : 'Não consta como solicitado', meta: p.solicitado ? `Data: ${p.data} • Especialidade: ${p.especialidade}` : 'Não há registro de realização no banco.' }));
-        render(results, query, 'Q11 — Exames solicitados e realizados'); return;
-      }
-
-      if (n === 12 || /recomendacao.*retorno|retorno.*mesmo medico|pacientes.*retorno/.test(q)) {
-        render([{ type: 'Q12 • Dados insuficientes', title: 'Não é possível identificar retorno ao mesmo médico', detail: 'Não existe vínculo paciente → atendimento → médico', meta: 'A tabela AGENDAMENTO não possui paciente nem médico; por isso não se pode calcular recomendação ou retorno dentro do prazo.' }], query, 'Q12 — Recomendações de retorno'); return;
-      }
-
-      if (n === 13 || /procedimento.*codigo.*operadora|operadora.*tuss/.test(q)) {
-        render([{ type: 'Q13 • Sem vínculo', title: 'Cobrado por procedimento e operadora', detail: 'Operadoras cadastradas:', meta: operadores.map(o => `${o.nome} — ${o.ans}`).join(' • ') }, { type: 'Q13 • Resultado', title: 'Valor não disponível', detail: 'O banco não relaciona operadora ao TUSS', meta: 'Não há contrato, cobertura ou procedimento associado a operadora cadastrado.' }], query, 'Q13 — Valor cobrado por operadora'); return;
-      }
-
-      if (n === 14 || /pacientes.*2026|atendidos.*2026|tres ou mais especialidades/.test(q)) {
-        render([{ type: 'Q14 • Dados insuficientes', title: 'Pacientes atendidos em 2026 não podem ser contados', detail: 'Sem vínculo paciente → agendamento → atendimento', meta: 'Existem atendimentos em 2026, mas o número de prontuário/paciente não aparece em nenhuma das tabelas desse fluxo.' }], query, 'Q14 — Pacientes atendidos em três especialidades'); return;
-      }
-
-      if (/unidade|clinica|recife|endereco|telefone|horario/.test(q)) {
-        const results = unidades.map(u => ({ type: 'Unidade', title: u.nome, detail: `${u.municipio} • ${u.telefone}`, meta: `${u.endereco} • Horário: ${u.horario}` }));
-        render(results, query); return;
-      }
-
-      if (/especialidade|cardiolog|ortoped|clinica geral/.test(q)) {
-        const results = profissionais.filter(p => p.crm).map(p => ({ type: 'Profissional', title: p.nome, detail: `CRM ${p.crm}`, meta: `${p.especialidades.join(' e ')} • ${unidadePorCodigo(p.unidade).nome}` }));
-        render(results, query); return;
-      }
-
-      if (/paciente|cpf|prontuario|cns/.test(q)) {
-        const results = pacientes.map(p => ({ type: 'Paciente', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Prontuário ${p.prontuario} • CNS ${p.cns} • Plano: ${p.plano}` }));
-        render(results, query); return;
-      }
-
-      if (/procedimento|exame|tuss|preparo/.test(q)) {
-        const results = procedimentos.map(p => ({ type: 'Procedimento', title: p.nome, detail: `TUSS ${p.codigo}`, meta: `${p.tipo} • Preparo: ${p.preparo} • Tempo: ${p.tempo}` }));
-        render(results, query); return;
-      }
-
-      if (/plano|convenio|carencia|operadora/.test(q)) {
-        const results = planos.map(p => ({ type: 'Plano', title: p.nome, detail: `${p.acomodacao} • ${p.abrangencia}`, meta: `Prazo de carência: ${p.carencia} dias` }));
-        render(results, query); return;
-      }
-
-      const terms = q.split(/\s+/).filter(Boolean);
-      const searchable = [];
-      profissionais.forEach(p => searchable.push({ type: 'Profissional', title: p.nome, detail: p.crm ? `CRM ${p.crm}` : p.funcao || p.setor, meta: `${p.cpf} • ${unidadePorCodigo(p.unidade).nome}` }));
-      unidades.forEach(u => searchable.push({ type: 'Unidade', title: u.nome, detail: u.endereco, meta: `${u.municipio} • ${u.telefone}` }));
-      pacientes.forEach(p => searchable.push({ type: 'Paciente', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Prontuário ${p.prontuario} • CNS ${p.cns}` }));
-      procedimentos.forEach(p => searchable.push({ type: 'Procedimento', title: p.nome, detail: `TUSS ${p.codigo}`, meta: p.preparo }));
-      planos.forEach(p => searchable.push({ type: 'Plano', title: p.nome, detail: p.acomodacao, meta: p.abrangencia }));
-      const results = searchable.filter(item => {
-        const text = normalize(`${item.type} ${item.title} ${item.detail} ${item.meta}`);
-        return terms.every(term => text.includes(term));
-      });
-      render(results, query);
+    function createRecord(type, data, source = {}) {
+      const searchableValues = Object.entries({ ...data, ...source }).flatMap(([field, value]) => [
+        field,
+        ...(Array.isArray(value) ? value : [value])
+      ]);
+      return { type, data, searchText: normalizeSearch([type, ...searchableValues].filter(hasValue).join(' ')) };
     }
 
-    form.addEventListener('submit', event => { event.preventDefault(); answer(input.value); });
+    const records = [
+      ...profissionais.map(profissional => {
+        const unidade = unidadePorCodigo(profissional.unidade);
+        const cargo = profissional.crm ? 'Médico' : profissional.funcao || profissional.setor;
+        const especialidades = profissional.especialidades ? profissional.especialidades.join(', ') : '';
+        return createRecord('Profissional', {
+          'Nome': profissional.nome,
+          'CPF': profissional.cpf,
+          'Código da unidade': profissional.unidade,
+          'Data de nascimento': profissional.nascimento,
+          'Telefone': profissional.telefone,
+          'E-mail': profissional.email,
+          'CRM': profissional.crm || '',
+          'UF de registro': profissional.ufRegistro || '',
+          'Matrícula': profissional.matricula,
+          'Cargo/área': cargo,
+          'Vínculo': profissional.vinculo,
+          'Unidade': unidade ? unidade.nome : '',
+          'Município': unidade ? unidade.municipio : '',
+          'Código da unidade': profissional.unidade,
+          'Especialidades': especialidades,
+          'COREN': profissional.coren || '',
+          'UF do COREN': profissional.coren ? profissional.ufRegistro || '' : '',
+          'Registro profissional': profissional.registro || '',
+          'Área de atuação': profissional.area || '',
+          'Setor': profissional.setor || '',
+          'Data de admissão': profissional.admissao,
+          'Detalhes': `Matrícula ${profissional.matricula} • ${cargo} • ${profissional.vinculo}`,
+          'Informações': [especialidades, profissional.area, unidade && unidade.municipio].filter(Boolean).join(' • ')
+        }, profissional);
+      }),
+      ...pacientes.map(paciente => createRecord('Paciente', {
+        'Nome': paciente.nome,
+        'CPF': paciente.cpf,
+        'Prontuário': paciente.prontuario,
+        'Número do prontuário': paciente.prontuario,
+        'CPF do paciente': paciente.cpf,
+        'Data de nascimento': paciente.nascimento,
+        'Município': paciente.municipio,
+        'Sexo': paciente.sexo,
+        'Nome da mãe': paciente.nomeMae,
+        'Endereço': paciente.endereco,
+        'Telefone': paciente.telefone,
+        'CNS': paciente.cns,
+        'Plano': paciente.plano,
+        'Número da carteirinha': paciente.carteirinha,
+        'Data início do plano': paciente.inicioPlano,
+        'Data fim do plano': paciente.fimPlano,
+        'Condição do plano': paciente.condicaoPlano,
+        'Detalhes': `CPF ${paciente.cpf} • Prontuário ${paciente.prontuario}`,
+        'Informações': `Nascimento ${paciente.nascimento} • ${paciente.municipio} • CNS ${paciente.cns} • Plano: ${paciente.plano}`
+      }, paciente)),
+      ...pacientes.map(paciente => createRecord('Prontuário', {
+        'Número do prontuário': paciente.prontuario,
+        'CPF do paciente': paciente.cpf,
+        'CNS': paciente.cns
+      }, paciente)),
+      ...pacientes.filter(paciente => paciente.carteirinha).map(paciente => {
+        const plano = planos.find(item => item.nome === paciente.plano);
+        return createRecord('Vínculo de plano', {
+          'Número do prontuário': paciente.prontuario,
+          'Código do plano': plano ? plano.codigo : '',
+          'Número da carteirinha': paciente.carteirinha,
+          'Data início do plano': paciente.inicioPlano,
+          'Data fim do plano': paciente.fimPlano,
+          'Condição do plano': paciente.condicaoPlano
+        }, paciente);
+      }),
+      ...unidades.map(unidade => createRecord('Unidade', {
+        'Código': unidade.codigo,
+        'Nome': unidade.nome,
+        'Unidade': unidade.nome,
+        'Endereço': unidade.endereco,
+        'Município': unidade.municipio,
+        'Telefone': unidade.telefone,
+        'Horário de funcionamento': unidade.horario,
+        'Data de inauguração': unidade.inauguracao,
+        'Detalhes': `${unidade.endereco} • ${unidade.municipio}`,
+        'Informações': `Telefone ${unidade.telefone} • Horário ${unidade.horario} • Inauguração ${unidade.inauguracao}`
+      }, unidade)),
+      ...procedimentos.map(procedimento => createRecord('Procedimento', {
+        'Nome': procedimento.nome,
+        'TUSS': procedimento.codigo,
+        'Tipo': procedimento.tipo,
+        'Preparo': procedimento.preparo,
+        'Tempo estimado': procedimento.tempo,
+        'Código do exame principal': procedimento.examePrincipal,
+        'ID atendimento': procedimento.solicitado || '',
+        'Data da solicitação': procedimento.data || '',
+        'Indicação clínica': procedimento.indicacao,
+        'Caráter': procedimento.carater,
+        'Especialidade': procedimento.especialidade,
+        'Detalhes': `TUSS ${procedimento.codigo} • ${procedimento.tipo}`,
+        'Informações': `Preparo: ${procedimento.preparo} • Tempo: ${procedimento.tempo} • Atendimento: ${procedimento.solicitado || 'não solicitado'}`
+      }, procedimento)),
+      ...procedimentos.filter(procedimento => procedimento.solicitado).map(procedimento => createRecord('Solicitação', {
+        'ID atendimento': procedimento.solicitado,
+        'TUSS': procedimento.codigo,
+        'Data da solicitação': procedimento.data,
+        'Indicação clínica': procedimento.indicacao,
+        'Caráter': procedimento.carater
+      }, procedimento)),
+      ...agendamentos.map(agendamento => createRecord('Agendamento', {
+        'ID agendamento': agendamento.id,
+        'Data': agendamento.data,
+        'Hora': agendamento.hora,
+        'Canal': agendamento.canal,
+        'Forma de pagamento': agendamento.pagamento,
+        'Situação': agendamento.situacao,
+        'Sala': agendamento.sala,
+        'Data do cancelamento': agendamento.cancelamento,
+        'Motivo do cancelamento': agendamento.motivo || '',
+        'Matrícula da administração': agendamento.administracao,
+        'Detalhes': `Agendamento ${agendamento.id} • ${agendamento.data} às ${agendamento.hora}`,
+        'Informações': `${agendamento.situacao} • ${agendamento.canal} • ${agendamento.pagamento} • Sala ${agendamento.sala} ${agendamento.motivo || ''}`
+      }, agendamento)),
+      ...atendimentos.map(atendimento => createRecord('Atendimento', {
+        'ID atendimento': atendimento.id,
+        'ID agendamento': atendimento.agendamento,
+        'Hora início': atendimento.inicio,
+        'Hora término': atendimento.termino,
+        'Queixa principal': atendimento.queixa,
+        'CID': atendimento.cid,
+        'Conduta': atendimento.conduta,
+        'Especialidades': atendimento.especialidade,
+        'Prazo de retorno': atendimento.retorno,
+        'Detalhes': `Atendimento ${atendimento.id} • Agendamento ${atendimento.agendamento}`,
+        'Informações': `${atendimento.inicio}–${atendimento.termino} • ${atendimento.cid} • ${atendimento.especialidade} • Retorno em ${atendimento.retorno} dias`
+      }, atendimento)),
+      ...agendas.map(agenda => {
+        const profissional = profissionais.find(item => item.crm === agenda.crm);
+        const unidade = unidadePorCodigo(agenda.unidade);
+        return createRecord('Agenda', {
+          'Profissional': profissional ? profissional.nome : '',
+          'CRM': agenda.crm,
+          'CRM médico': agenda.crm,
+          'Unidade': unidade ? unidade.nome : '',
+          'Município': unidade ? unidade.municipio : '',
+          'Código da unidade': agenda.unidade,
+          'Dia da semana': agenda.dia,
+          'Horário de início': agenda.inicio,
+          'Horário de término': agenda.fim,
+          'Vigência': agenda.vigencia,
+          'Duração da consulta': agenda.duracao,
+          'Detalhes': `CRM ${agenda.crm} • ${agenda.dia}, ${agenda.inicio}–${agenda.fim}`,
+          'Informações': `${unidade ? unidade.nome : ''} • Vigência até ${agenda.vigencia} • Consulta ${agenda.duracao}`
+        }, { ...agenda, nome_profissional: profissional ? profissional.nome : '' });
+      }),
+      ...planos.map(plano => createRecord('Plano', {
+        'Nome': plano.nome,
+        'Código': plano.codigo,
+        'Acomodação': plano.acomodacao,
+        'Tipo de acomodação': plano.acomodacao,
+        'Abrangência': plano.abrangencia,
+        'Carência': `${plano.carencia} dias`,
+        'Prazo de carência': plano.carencia,
+        'Detalhes': `Código ${plano.codigo} • ${plano.acomodacao}`,
+        'Informações': `${plano.abrangencia} • Carência ${plano.carencia} dias`
+      }, plano)),
+      ...operadores.map(operador => createRecord('Operadora', {
+        'Nome': operador.nome,
+        'CNPJ': operador.cnpj,
+        'Registro ANS': operador.ans,
+        'Contato': operador.contato,
+        'Detalhes': `CNPJ ${operador.cnpj} • ${operador.ans}`,
+        'Informações': `Contato ${operador.contato}`
+      }, operador)),
+      ...especialidades.map(especialidade => createRecord('Especialidade', {
+        'Código': especialidade.codigo,
+        'Nome': especialidade.nome,
+        'Conselho': especialidade.conselho
+      }, especialidade)),
+      ...profissionais.filter(profissional => profissional.crm).flatMap(profissional =>
+        profissional.especialidades.map(nomeEspecialidade => {
+          const especialidade = especialidades.find(item => item.nome === nomeEspecialidade);
+          return createRecord('Especialidade médica', {
+            'Matrícula do médico': profissional.matricula,
+            'CRM': profissional.crm,
+            'Código da especialidade': especialidade ? especialidade.codigo : '',
+            'Nome da especialidade': nomeEspecialidade
+          }, profissional);
+        })
+      ),
+      ...salas.map(sala => createRecord('Sala', {
+        'Número da sala': sala.numero,
+        'Capacidade': sala.capacidade,
+        'Equipamentos': sala.equipamento
+      }, sala)),
+      ...medicamentos.map(medicamento => createRecord('Medicamento', {
+        'Nome': medicamento.nomeComercial,
+        'Código do medicamento': medicamento.codigo,
+        'Princípio ativo': medicamento.principioAtivo,
+        'Nome comercial': medicamento.nomeComercial,
+        'Apresentação': medicamento.apresentacao,
+        'Concentração': medicamento.concentracao,
+        'Tarja': medicamento.tarja
+      }, medicamento)),
+      ...prescricoes.map(prescricao => createRecord('Prescrição', {
+        'ID atendimento': prescricao.atendimento,
+        'Código do medicamento': prescricao.medicamento,
+        'Sequência do item': prescricao.sequencia,
+        'Quantidade': prescricao.quantidade,
+        'Posologia': prescricao.posologia,
+        'Duração do tratamento': prescricao.duracao,
+        'Via de administração': prescricao.via
+      }, prescricao)),
+      ...evolucoes.map(evolucao => createRecord('Evolução', {
+        'Sequência da evolução': evolucao.seq || '',
+        'Prontuário': evolucao.prontuario,
+        'Matrícula': evolucao.profissional,
+        'Data e hora': evolucao.dataHora,
+        'Peso': evolucao.peso,
+        'Altura': evolucao.altura,
+        'Frequência cardíaca': evolucao.frequenciaCardiaca,
+        'Temperatura': evolucao.temperatura,
+        'Pressão arterial': evolucao.pressao,
+        'Detalhes': `Prontuário ${evolucao.prontuario} • Profissional ${evolucao.profissional}`,
+        'Informações': evolucao.texto
+      }, evolucao))
+    ];
 
-    document.querySelectorAll('[data-query]').forEach(button => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('[data-query]').forEach(item => item.classList.remove('active'));
-        button.classList.add('active');
+    function filterRecords(query = '') {
+      const tokens = normalizeSearch(query).split(/\s+/).filter(Boolean);
+      const selectedFields = fieldFilters.filter(filter => filter.checked).map(filter => filter.value);
+      const selectedCategories = categoryFilters.filter(filter => filter.checked).map(filter => filter.value);
 
-        input.value = button.dataset.query;
-        categoryFilter.value = button.dataset.category || 'Todos';
-
-        if (button.dataset.query) {
-          answer(input.value);
-        } else {
-          categoryFilter.dispatchEvent(new Event('change'));
-        }
-
-        document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return records.filter(record => {
+        if (selectedCategories.length && !selectedCategories.includes(record.type)) return false;
+        if (!selectedFields.every(field => hasValue(record.data[field]))) return false;
+        return tokens.every(token => record.searchText.includes(token));
       });
+    }
+
+    function updateResults() {
+      render(filterRecords(input.value), input.value.trim());
+    }
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      updateResults();
     });
 
-    categoryFilter.addEventListener('change', () => {
-      const selectedCategory = categoryFilter.value;
-      const query = input.value;
-      const q = normalize(query);
+    filterToggle.addEventListener('click', () => {
+      const isOpening = filtersPanel.hidden;
+      filtersPanel.hidden = !isOpening;
+      filterToggle.setAttribute('aria-expanded', String(isOpening));
+      filterToggle.setAttribute('aria-label', isOpening ? 'Fechar filtros' : 'Abrir filtros');
+    });
 
-      let filteredResults = [];
+    buildFieldFilters();
 
-      if (selectedCategory === 'Q01') {
-        filteredResults = profissionais.filter(p => p.crm).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map(p => ({
-          type: 'Q01 • Médico', title: p.nome, detail: `CRM ${p.crm} • Unidade ${p.unidade}`, meta: `UF PE • Data de admissão: ${p.admissao} • Vinculo: ${p.vinculo}`
-        }));
-      } else if (selectedCategory === 'Q02') {
-        filteredResults = agendamentos.filter(a => a.situacao === 'Cancelado' && a.data.startsWith('2026-10')).map(a => ({
-          type: 'Q02 • Cancelamento', title: `Agendamento ${a.id}`, detail: `Data: ${a.data} • Hora: ${a.hora}`, meta: `Cancelado em ${a.cancelamento} • Motivo: ${a.motivo}`
-        }));
-        if (!filteredResults.length) filteredResults.push({ type: 'Q02 • Resultado', title: 'Nenhum cancelamento em outubro de 2026', detail: 'No conjunto de dados atual', meta: 'Os dados cadastrados possuem cancelamento apenas em novembro de 2026.' });
-      } else if (selectedCategory === 'Q03') {
-        filteredResults = procedimentos.map(p => ({ type: 'Q03 • Procedimento', title: p.nome, detail: `TUSS ${p.codigo} • ${p.tipo}`, meta: `Preparo: ${p.preparo} • Tempo estimado: ${p.tempo}` }));
-      } else if (selectedCategory === 'Paciente') {
-        filteredResults = pacientes.map(p => ({ type: 'Paciente', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Prontuário ${p.prontuario} • CNS ${p.cns} • Plano: ${p.plano}` }));
-      } else if (selectedCategory === 'Unidade') {
-        filteredResults = unidades.map(u => ({ type: 'Unidade', title: u.nome, detail: `${u.municipio} • ${u.telefone}`, meta: `${u.endereco} • Horário: ${u.horario}` }));
-      } else if (selectedCategory === 'Plano') {
-        filteredResults = planos.map(p => ({ type: 'Plano', title: p.nome, detail: `${p.acomodacao} • ${p.abrangencia}`, meta: `Prazo de carência: ${p.carencia} dias` }));
-      } else if (selectedCategory === 'Agenda') {
-        filteredResults = profissionais.filter(p => p.crm).flatMap(p => p.especialidades.map(especialidade => {
-          const horario = agendas.find(a => a.crm === p.crm);
-          const unidade = unidadePorCodigo(p.unidade);
-          return { type: 'Q06 • Agenda', title: `${p.nome} — ${especialidade}`, detail: unidade.nome, meta: `${horario.dia}: ${horario.inicio} às ${horario.fim} • Vigência até ${horario.vigencia}` };
-        }));
-      } else {
-        filteredResults = profissionais.filter(p => p.crm).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map(p => ({
-          type: 'Q01 • Médico', title: p.nome, detail: `CRM ${p.crm} • Unidade ${p.unidade}`, meta: `UF PE • Data de admissão: ${p.admissao} • Vinculo: ${p.vinculo}`
-        }));
-        const results = agendamentos.filter(a => a.situacao === 'Cancelado' && a.data.startsWith('2026-10')).map(a => ({
-          type: 'Q02 • Cancelamento', title: `Agendamento ${a.id}`, detail: `Data: ${a.data} • Hora: ${a.hora}`, meta: `Cancelado em ${a.cancelamento} • Motivo: ${a.motivo}`
-        }));
-        if (!results.length) results.push({ type: 'Q02 • Resultado', title: 'Nenhum cancelamento em outubro de 2026', detail: 'No conjunto de dados atual', meta: 'Os dados cadastrados possuem cancelamento apenas em novembro de 2026.' });
-        filteredResults = [...filteredResults, ...results];
-        const resultsTUSS = procedimentos.map(p => ({ type: 'Q03 • Procedimento', title: p.nome, detail: `TUSS ${p.codigo} • ${p.tipo}`, meta: `Preparo: ${p.preparo} • Tempo estimado: ${p.tempo}` }));
-        filteredResults = [...filteredResults, ...resultsTUSS];
-        const resultsPaciente = pacientes.map(p => ({ type: 'Paciente', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Prontuário ${p.prontuario} • CNS ${p.cns} • Plano: ${p.plano}` }));
-        filteredResults = [...filteredResults, ...resultsPaciente];
-        const resultsUnidade = unidades.map(u => ({ type: 'Unidade', title: u.nome, detail: `${u.municipio} • ${u.telefone}`, meta: `${u.endereco} • Horário: ${u.horario}` }));
-        filteredResults = [...filteredResults, ...resultsUnidade];
-        const resultsPlano = planos.map(p => ({ type: 'Plano', title: p.nome, detail: `${p.acomodacao} • ${p.abrangencia}`, meta: `Prazo de carência: ${p.carencia} dias` }));
-        filteredResults = [...filteredResults, ...resultsPlano];
-        const resultsAgenda = profissionais.filter(p => p.crm).flatMap(p => p.especialidades.map(especialidade => {
-          const horario = agendas.find(a => a.crm === p.crm);
-          const unidade = unidadePorCodigo(p.unidade);
-          return { type: 'Q06 • Agenda', title: `${p.nome} — ${especialidade}`, detail: unidade.nome, meta: `${horario.dia}: ${horario.inicio} às ${horario.fim} • Vigência até ${horario.vigencia}` };
-        }));
-        filteredResults = [...filteredResults, ...resultsAgenda];
+    allFilter.addEventListener('change', () => {
+      if (allFilter.checked) {
+        fieldFilters.forEach(filter => { filter.checked = false; });
+        categoryFilters.forEach(filter => { filter.checked = false; });
       }
-
-      const terms = normalize(query).split(/\s+/).filter(Boolean);
-      filteredResults = filteredResults.filter(item => {
-        const text = normalize(`${item.type} ${item.title} ${item.detail} ${item.meta}`);
-        return terms.every(term => text.includes(term));
-      });
-
-      render(filteredResults, query);
+      updateResults();
     });
 
-    render([], '');
-    cards.innerHTML = '<div class="empty"><strong>Pesquise nos dados da clínica</strong><p>Use uma pergunta completa ou digite nome, CPF, CRM, unidade, especialidade, TUSS ou plano.</p></div>';
+    [...fieldFilters, ...categoryFilters].forEach(filter => {
+      filter.addEventListener('change', () => {
+        allFilter.checked = false;
+        updateResults();
+      });
+    });
+
+    updateResults();
   </script>
 </body>
 </html>
