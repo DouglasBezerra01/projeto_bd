@@ -240,32 +240,7 @@
     }
 
     function buildFieldFilters() {
-      const hiddenFields = new Set([
-        'Vínculo',
-        'Preparo',
-        'Indicação clínica',
-        'Caráter',
-        'Queixa principal',
-        'Conduta',
-        'Conselho',
-        'Tipo de acomodação',
-        'Capacidade',
-        'Equipamentos',
-        'Nome comercial',
-        'Princípio ativo',
-        'Código do medicamento',
-        'Tarja',
-        'Frequência cardíaca',
-        'Concentração',
-        'Quantidade',
-        'Pressão arterial',
-        'Apresentação',
-        'Sequência do item',
-        'Temperatura'
-      ]);
-      const fields = orderedFields(records).filter(field =>
-        field !== 'Detalhes' && field !== 'Informações' && !hiddenFields.has(field)
-      );
+      const fields = orderedFields(records).filter(field => field !== 'Detalhes' && field !== 'Informações');
       fieldOptions.replaceChildren();
 
       fields.forEach(field => {
