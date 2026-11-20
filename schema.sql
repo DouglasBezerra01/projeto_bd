@@ -78,7 +78,8 @@ CREATE TABLE PACIENTES (
     sexo VARCHAR(20),
     nome_mae VARCHAR(100),
     endereco VARCHAR(200),
-    telefone VARCHAR(20)
+    telefone VARCHAR(20),
+    nome_responsavel VARCHAR(100)
 );
 
 -- 10. Tabela PRONTUARIO
@@ -154,8 +155,12 @@ CREATE TABLE AGENDAMENTO (
     motivo_cancelamento TEXT,
     numero_sala INTEGER,
     matricula_administracao INTEGER,
+    cpf_paciente VARCHAR(14),
+    matricula_medico INTEGER,
     FOREIGN KEY (numero_sala) REFERENCES SALAS (numero_sala),
-    FOREIGN KEY (matricula_administracao) REFERENCES ADMINISTRACAO (matricula_profissionais)
+    FOREIGN KEY (matricula_administracao) REFERENCES ADMINISTRACAO (matricula_profissionais),
+    FOREIGN KEY (cpf_paciente) REFERENCES PACIENTES (cpf),
+    FOREIGN KEY (matricula_medico) REFERENCES MEDICO (matricula_profissionais)
 );
 
 -- 17. Tabela ATENDIMENTO
@@ -188,6 +193,7 @@ CREATE TABLE SOLICITA (
     data_solicitacao DATE,
     indicacao_clinica TEXT,
     carater VARCHAR(50),
+    status_exame VARCHAR(20) DEFAULT 'Solicitado',
     PRIMARY KEY (id_atendimento, codigo_TUSS_procedimento),
     FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
     FOREIGN KEY (codigo_TUSS_procedimento) REFERENCES PROCEDIMENTO_EXAME (codigo_TUSS)
@@ -228,4 +234,28 @@ CREATE TABLE AGENDAS (
     duracao_consulta TIME,
     PRIMARY KEY (crm_medico, codigo_unidade, dia_semana, hora_inicio),
     FOREIGN KEY (codigo_unidade) REFERENCES UNIDADES (codigo)
+);
+
+-- 23. Tabela GUIAS
+CREATE TABLE GUIAS (
+    id_guia INTEGER PRIMARY KEY,
+    id_atendimento INTEGER NOT NULL,
+    cnpj_operadora VARCHAR(18) NOT NULL,
+    competencia VARCHAR(7) NOT NULL,
+    valor_apresentado DECIMAL(10, 2) NOT NULL,
+    valor_pago DECIMAL(10, 2) NOT NULL,
+    valor_glosado DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
+    FOREIGN KEY (cnpj_operadora) REFERENCES OPERADORES (cnpj)
+);
+
+-- 24. Tabela TABELA_PRECO
+CREATE TABLE TABELA_PRECOS (
+    id_preco INTEGER PRIMARY KEY,
+    codigo_TUSS_procedimento VARCHAR(20) NOT NULL,
+    cnpj_operadora VARCHAR(18), -- NULL = Tabela Particular
+    valor DECIMAL(10, 2) NOT NULL,
+    data_vigencia DATE NOT NULL,
+    FOREIGN KEY (codigo_TUSS_procedimento) REFERENCES PROCEDIMENTO_EXAME (codigo_TUSS),
+    FOREIGN KEY (cnpj_operadora) REFERENCES OPERADORES (cnpj)
 );
