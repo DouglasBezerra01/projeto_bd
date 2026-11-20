@@ -44,12 +44,12 @@ INSERT INTO MEDICO_ESPECIALIDADE (matricula_medico, codigo_especialidade) VALUES
 (106, 1);
 
 -- 9. PACIENTES
-INSERT INTO PACIENTES (cpf, nome, data_nascimento, sexo, nome_mae, endereco, telefone, nome_responsavel) VALUES
-('777.777.777-77', 'Ana Beatriz Souza', '1992-06-15', 'Feminino', 'Maria das Graças Souza', 'Rua do Sol, 120', '(81) 98888-1111', 'Carlos Souza'),
-('888.888.888-88', 'Marcos Vinícius Oliveira', '1975-12-08', 'Masculino', 'Helena Oliveira', 'Av. Boa Vista, 890', '(81) 98888-2222', 'Roberto Oliveira'),
-('999.999.999-99', 'Juliana Mendes', '2001-03-30', 'Feminino', 'Cláudia Mendes', 'Rua da Aurora, 45', '(81) 98888-3333', NULL),
-('101.101.101-10', 'Lucas Gabriel Ferreira', '2012-05-14', 'Masculino', 'Patrícia Ferreira', 'Rua das Acácias, 78', '(81) 98888-4444', 'Patrícia Ferreira'),
-('202.202.202-20', 'Sofia Ribeiro Lima', '2016-09-22', 'Feminino', 'Camila Ribeiro', 'Av. Conselheiro Aguiar, 310', '(81) 98888-5555', 'Ricardo Lima');
+INSERT INTO PACIENTES (cpf, nome, data_nascimento, sexo, nome_mae, endereco, municipio, telefone, nome_responsavel) VALUES
+('777.777.777-77', 'Ana Beatriz Souza', '1992-06-15', 'Feminino', 'Maria das Graças Souza', 'Rua do Sol, 120', 'Recife', '(81) 98888-1111', 'Carlos Souza'),
+('888.888.888-88', 'Marcos Vinícius Oliveira', '1975-12-08', 'Masculino', 'Helena Oliveira', 'Av. Boa Vista, 890', 'Recife', '(81) 98888-2222', 'Roberto Oliveira'),
+('999.999.999-99', 'Juliana Mendes', '2001-03-30', 'Feminino', 'Cláudia Mendes', 'Rua da Aurora, 45', 'Olinda', '(81) 98888-3333', NULL),
+('101.101.101-10', 'Lucas Gabriel Ferreira', '2012-05-14', 'Masculino', 'Patrícia Ferreira', 'Rua das Acácias, 78', 'Recife', '(81) 98888-4444', 'Patrícia Ferreira'),
+('202.202.202-20', 'Sofia Ribeiro Lima', '2016-09-22', 'Feminino', 'Camila Ribeiro', 'Av. Conselheiro Aguiar, 310', 'Jaboatão dos Guararapes', '(81) 98888-5555', 'Ricardo Lima');
 
 -- 10. PRONTUARIO
 INSERT INTO PRONTUARIO (numero_prontuario, cpf_paciente, cns) VALUES
@@ -65,9 +65,9 @@ INSERT INTO EVOLUCAO (numero_prontuario, matricula_profissional, data_hora, peso
 (1002, 102, '2026-11-12 10:15:00', 84.00, 1.78, 82, 36.80, '140/90', 'Paciente hipertenso em acompanhamento regular. Orientado sobre dieta hipossódica.');
 
 -- 12. PLANOS
-INSERT INTO PLANOS (codigo, nome, tipo_acomodacao, abrangencia, prazo_carencia) VALUES
-(10, 'Saúde Total Ouro', 'Apartamento', 'Nacional', 30),
-(20, 'Plano Básico Regional', 'Enfermaria', 'Estadual', 60);
+INSERT INTO PLANOS (codigo, nome, tipo_acomodacao, abrangencia, prazo_carencia, cnpj_operadora) VALUES
+(10, 'Saúde Total Ouro', 'Apartamento', 'Nacional', 30, '12.345.678/0001-99'),
+(20, 'Plano Básico Regional', 'Enfermaria', 'Estadual', 60, '98.765.432/0001-11');
 
 -- 13. POSSUI_PLANO
 INSERT INTO POSSUI_PLANO (numero_prontuario, codigo_plano, numero_carteirinha, data_inicio, data_fim, condicao) VALUES
@@ -86,16 +86,16 @@ INSERT INTO SALAS (numero_sala, capacidade, equipamento) VALUES
 (3, 2, 'Aparelho de Eletrocardiograma, Maca');
 
 -- 16. AGENDAMENTO
-INSERT INTO AGENDAMENTO (id_agendamento, data_marcacao, data, hora, canal, forma_pagamento, situacao, data_cancelamento, motivo_cancelamento, numero_sala, matricula_administracao, cpf_paciente, matricula_medico) VALUES
-(501, '2026-11-05', '2026-11-10', '09:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
-(502, '2026-11-08', '2026-11-12', '10:30:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '888.888.888-88', 102),
-(503, '2026-11-10', '2026-11-15', '14:00:00', 'Telefone', 'Particular', 'Cancelado', '2026-11-14', 'Imprevisto pessoal do paciente', 2, 101, '999.999.999-99', 103),
-(504, '2026-11-10', '2026-11-16', '08:30:00', 'WhatsApp', 'Convênio', 'faltou', NULL, NULL, 1, 101, '101.101.101-10', 106),
-(505, '2026-11-12', '2026-11-17', '15:00:00', 'Telefone', 'Particular', 'faltou', NULL, NULL, 2, 101, '202.202.202-20', 103),
-(506, '2026-08-25', '2026-09-01', '09:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
-(507, '2026-09-10', '2026-09-20', '09:30:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
-(508, '2026-08-01', '2026-08-10', '11:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '999.999.999-99', 103),
-(509, '2026-10-01', '2026-10-05', '10:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '777.777.777-77', 103);
+INSERT INTO AGENDAMENTO (id_agendamento, data_marcacao, data, hora, canal, forma_pagamento, situacao, data_cancelamento, motivo_cancelamento, numero_sala, matricula_administracao, cpf_paciente, matricula_medico, codigo_especialidade) VALUES
+(501, '2026-11-05', '2026-11-10', '09:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102, 1),
+(502, '2026-11-08', '2026-11-12', '10:30:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '888.888.888-88', 102, 2),
+(503, '2026-11-10', '2026-11-15', '14:00:00', 'Telefone', 'Particular', 'Cancelado', '2026-11-14', 'Imprevisto pessoal do paciente', 2, 101, '999.999.999-99', 103, 3),
+(504, '2026-11-10', '2026-11-16', '08:30:00', 'WhatsApp', 'Convênio', 'faltou', NULL, NULL, 1, 101, '101.101.101-10', 106, 1),
+(505, '2026-11-12', '2026-11-17', '15:00:00', 'Telefone', 'Particular', 'faltou', NULL, NULL, 2, 101, '202.202.202-20', 103, 3),
+(506, '2026-08-25', '2026-09-01', '09:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102, 1),
+(507, '2026-09-10', '2026-09-20', '09:30:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102, 2),
+(508, '2026-08-01', '2026-08-10', '11:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '999.999.999-99', 103, 3),
+(509, '2026-10-01', '2026-10-05', '10:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '777.777.777-77', 103, 3);
 
 -- 17. ATENDIMENTO
 INSERT INTO ATENDIMENTO (id_atendimento, id_agendamento, hora_inicio, hora_termino, queixa_principal, teses_diagnosticas_CID, conduta, prazo_retorno) VALUES
@@ -136,16 +136,17 @@ INSERT INTO AGENDAS (crm_medico, codigo_unidade, dia_semana, hora_inicio, hora_t
 ('12345-PE', 1, 'Quarta-feira', '14:00:00', '18:00:00', '2026-12-31', '00:30:00'),
 ('67890-PE', 2, 'Terça-feira', '09:00:00', '15:00:00', '2026-12-31', '00:30:00');
 
--- 23. GUIAS
-INSERT INTO GUIAS (id_guia, id_atendimento, cnpj_operadora, competencia, valor_apresentado, valor_pago, valor_glosado) VALUES
-(1, 901, '12.345.678/0001-99', '2026-11', 350.00, 300.00, 50.00),
-(2, 902, '98.765.432/0001-11', '2026-11', 280.00, 280.00, 0.00),
-(3, 903, '12.345.678/0001-99', '2026-09', 420.00, 340.00, 80.00);
-
--- 24. TABELA_PRECOS
+-- 23. TABELA_PRECOS
 INSERT INTO TABELA_PRECOS (id_preco, codigo_TUSS_procedimento, cnpj_operadora, valor, data_vigencia) VALUES
 (1, '40101010', '12.345.678/0001-99', 120.00, '2025-01-01'),
 (2, '40101010', '12.345.678/0001-99', 135.00, '2025-07-01'),
 (3, '40101010', '12.345.678/0001-99', 150.00, '2026-01-01'),
 (4, '40101010', NULL, 200.00, '2026-01-01'),
-(5, '40805018', '98.765.432/0001-11', 180.00, '2026-01-01');
+(5, '40805018', '98.765.432/0001-11', 180.00, '2026-01-01'),
+(6, '40101029', '12.345.678/0001-99', 250.00, '2026-01-01');
+-- 24. GUIAS
+INSERT INTO GUIAS (id_guia, id_atendimento, cnpj_operadora, id_preco, competencia, valor_apresentado, valor_pago, valor_glosado) VALUES
+(1, 901, '12.345.678/0001-99', 3, '2026-11', 350.00, 300.00, 50.00),
+(2, 902, '98.765.432/0001-11', 5, '2026-11', 280.00, 280.00, 0.00),
+(3, 903, '12.345.678/0001-99', 6, '2026-09', 420.00, 340.00, 80.00);
+
