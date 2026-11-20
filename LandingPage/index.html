@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clínica | Consulta de dados</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="Navegação principal">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 3v18M3 12h18"/></svg>
+        </div>
+        Clínica
+      </div>
+      <div class="nav-links">
+        <a href="#inicio">Início</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="eyebrow">Cuidado integrado</div>
+      <h1>Como podemos ajudar?</h1>
+      <p class="subtitle">Pesquise por especialidade, profissional, unidade ou procedimento e encontre rapidamente o atendimento ideal.</p>
+
+      <form class="search-shell" id="searchForm">
+        <label class="search-input-wrap" for="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="search" type="search" autocomplete="off" placeholder="Ex.: cardiologia, Dra. Mariana ou Recife">
+        </label>
+        <button id="searchButton" type="submit">Buscar</button>
+      </form>
+
+      <div class="filter-bar" aria-label="Filtros de busca">
+        <label for="categoryFilter">Filtrar por:</label>
+        <select id="categoryFilter">
+          <option value="Todos">Todos</option>
+          <option value="Q01">Médicos</option>
+          <option value="Q02">Cancelamentos</option>
+          <option value="Q03">Procedimentos</option>
+          <option value="Paciente">Pacientes</option>
+          <option value="Unidade">Unidades</option>
+          <option value="Plano">Planos</option>
+          <option value="Agenda">Agendas</option>
+        </select>
+      </div>
+
+      <div class="quick-searches keyword-filter" aria-label="Palavras-chave frequentes">
+        <button type="button" data-category="Todos" data-query="">Todas</button>
+        <button type="button" data-category="Q01" data-query="médico CRM UF admissão">Médico</button>
+        <button type="button" data-category="Q02" data-query="cancelado outubro data hora">Cancelamento</button>
+        <button type="button" data-category="Q03" data-query="código TUSS preparo tempo">TUSS</button>
+        <button type="button" data-category="Paciente" data-query="paciente CPF prontuário CNS">Paciente</button>
+        <button type="button" data-category="Unidade" data-query="unidade endereço município telefone horário">Unidade</button>
+        <button type="button" data-category="Plano" data-query="plano operadora carência cobertura">Plano</button>
+        <button type="button" data-category="Agenda" data-query="agenda médico especialidade unidade horário">Agenda</button>
+        <button type="button" data-category="Todos" data-query="exame procedimento solicitação">Exames</button>
+      </div>
+    </section>
+
+    <section id="results" aria-live="polite">
+      <div class="results-heading">
+        <h2 id="resultsTitle">Opções disponíveis</h2>
+        <span id="resultCount"></span>
+      </div>
+      <div class="cards" id="cards"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© 2026 Clínica</span>
+      <span>Atendimento humanizado e integrado</span>
+    </div>
+  </footer>
+
+  <script>
+    const unidades = [
+      { codigo: 1, nome: 'Unidade Central de Saúde', endereco: 'Av. Principal, 1000 - Centro', municipio: 'Recife', telefone: '(81) 3333-1000', horario: '07:00 às 22:00', inauguracao: '2015-03-10' },
+      { codigo: 2, nome: 'Clínica Zona Sul', endereco: 'Rua das Flores, 450 - Boa Viagem', municipio: 'Recife', telefone: '(81) 3333-2000', horario: '08:00 às 18:00', inauguracao: '2019-08-22' }
+    ];
+
+    const profissionais = [
+      { matricula: 101, nome: 'Carlos Eduardo Silva', cpf: '111.111.111-11', vinculo: 'CLT', admissao: '2018-01-15', unidade: 1, setor: 'Recepção e Agendamento' },
+      { matricula: 102, nome: 'Dra. Mariana Costa', cpf: '222.222.222-22', vinculo: 'PJ', admissao: '2016-05-10', unidade: 1, crm: '12345-PE', especialidades: ['Cardiologia', 'Clínica Geral'] },
+      { matricula: 103, nome: 'Dr. Roberto Almeida', cpf: '333.333.333-33', vinculo: 'PJ', admissao: '2020-02-01', unidade: 2, crm: '67890-PE', especialidades: ['Ortopedia'] },
+      { matricula: 104, nome: 'Fernanda Lima', cpf: '444.444.444-44', vinculo: 'CLT', admissao: '2019-11-12', unidade: 1, funcao: 'Enfermeira', coren: '98765-ENF' },
+      { matricula: 105, nome: 'João Pedro Santos', cpf: '555.555.555-55', vinculo: 'CLT', admissao: '2021-06-20', unidade: 2, funcao: 'Técnico', registro: 'TEC-54321', area: 'Radiologia e Exames de Imagem' }
+    ];
+
+    const pacientes = [
+      { cpf: '777.777.777-77', nome: 'Ana Beatriz Souza', nascimento: '1992-06-15', municipio: 'Recife', cns: '700001112223334', prontuario: 1001, plano: 'Saúde Total Ouro', responsavel: 'não informado no banco' },
+      { cpf: '888.888.888-88', nome: 'Marcos Vinícius Oliveira', nascimento: '1975-12-08', municipio: 'Recife', cns: '700004445556667', prontuario: 1002, plano: 'Plano Básico Regional', responsavel: 'não informado no banco' },
+      { cpf: '999.999.999-99', nome: 'Juliana Mendes', nascimento: '2001-03-30', municipio: 'Recife', cns: '700007778889990', prontuario: 1003, plano: 'não informado', responsavel: 'não informado no banco' }
+    ];
+
+    const procedimentos = [
+      { codigo: '40101010', nome: 'Eletrocardiograma (ECG)', tipo: 'Exame Cardiológico', preparo: 'Não usar cremes no tórax no dia do exame.', tempo: '00:20:00', solicitado: 901, data: '2026-11-10', especialidade: 'Cardiologia' },
+      { codigo: '40805018', nome: 'Radiografia de Joelho Direito', tipo: 'Exame de Imagem', preparo: 'Remover objetos metálicos da região.', tempo: '00:15:00', solicitado: 902, data: '2026-11-12', especialidade: 'Ortopedia' },
+      { codigo: '40101029', nome: 'Teste Ergométrico', tipo: 'Exame Cardiológico', preparo: 'Usar roupas leves e tênis; evitar cafeína 3h antes.', tempo: '00:40:00', solicitado: null, especialidade: 'Cardiologia' }
+    ];
+
+    const agendamentos = [
+      { id: 501, data: '2026-11-10', hora: '09:00', canal: 'WhatsApp', pagamento: 'Convênio', situacao: 'Realizado', sala: 1 },
+      { id: 502, data: '2026-11-12', hora: '10:30', canal: 'Presencial', pagamento: 'Convênio', situacao: 'Realizado', sala: 1 },
+      { id: 503, data: '2026-11-15', hora: '14:00', canal: 'Telefone', pagamento: 'Particular', situacao: 'Cancelado', cancelamento: '2026-11-14', motivo: 'Imprevisto pessoal do paciente', sala: 2 }
+    ];
+
+    const agendas = [
+      { crm: '12345-PE', unidade: 1, dia: 'Segunda-feira', inicio: '08:00', fim: '12:00', vigencia: '2026-12-31', duracao: '00:30:00' },
+      { crm: '12345-PE', unidade: 1, dia: 'Quarta-feira', inicio: '14:00', fim: '18:00', vigencia: '2026-12-31', duracao: '00:30:00' },
+      { crm: '67890-PE', unidade: 2, dia: 'Terça-feira', inicio: '09:00', fim: '15:00', vigencia: '2026-12-31', duracao: '00:30:00' }
+    ];
+
+    const operadores = [
+      { cnpj: '12.345.678/0001-99', nome: 'Operadora Saúde Brasil S.A.', ans: 'ANS-345678', contato: 'contato@saudebrasil.com.br' },
+      { cnpj: '98.765.432/0001-11', nome: 'Vida Plena Assistência Médica Ltda', ans: 'ANS-987654', contato: 'convenios@vidaplena.com.br' }
+    ];
+
+    const planos = [
+      { codigo: 10, nome: 'Saúde Total Ouro', acomodacao: 'Apartamento', abrangencia: 'Nacional', carencia: 30 },
+      { codigo: 20, nome: 'Plano Básico Regional', acomodacao: 'Enfermaria', abrangencia: 'Estadual', carencia: 60 }
+    ];
+
+    const evolucoes = [
+      { prontuario: 1001, profissional: 104, data: '2026-11-10', retorno: null, texto: 'Paciente relata leve cansaço aos esforços. Sinais vitais estáveis.' },
+      { prontuario: 1002, profissional: 102, data: '2026-11-12', retorno: null, texto: 'Paciente hipertenso em acompanhamento regular.' }
+    ];
+
+    const atendimentos = [
+      { id: 901, agendamento: 501, inicio: '09:05', termino: '09:35', cid: 'R00.2 - Palpitações', retorno: 30, especialidade: 'Cardiologia' },
+      { id: 902, agendamento: 502, inicio: '10:32', termino: '11:00', cid: 'M25.5 - Dor articular', retorno: 15, especialidade: 'Ortopedia' }
+    ];
+
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('search');
+    const cards = document.getElementById('cards');
+    const resultCount = document.getElementById('resultCount');
+    const resultsTitle = document.getElementById('resultsTitle');
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    function normalize(value) {
+      return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    }
+
+    function unidadePorCodigo(codigo) {
+      return unidades.find(unidade => unidade.codigo === codigo);
+    }
+
+    function render(results, query = '', question = '') {
+      cards.innerHTML = '';
+      resultCount.textContent = `${results.length} ${results.length === 1 ? 'resultado' : 'resultados'}`;
+      resultsTitle.textContent = question || (query ? `Resultados para “${query}”` : 'Opções disponíveis');
+
+      if (!results.length) {
+        cards.innerHTML = '<div class="empty"><strong>Nenhum resultado encontrado.</strong><p>Tente pesquisar por outra especialidade, unidade ou profissional.</p></div>';
+        return;
+      }
+
+      results.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `<span class="card-tag">${item.type}</span><h3>${item.title}</h3><p><strong>${item.detail}</strong></p><p>${item.meta}</p>`;
+        cards.appendChild(card);
+      });
+    }
+
+    function answer(query) {
+      const q = normalize(query);
+      const questionNumber = q.match(/\bq0?(1|2|3|4|5|6|7|8|9|10|11|12|13|14)\b/);
+      const n = questionNumber ? Number(questionNumber[1]) : null;
+
+      if (n === 1 || /nome.*crm.*uf.*admissao|medicos.*vinculo|profissionais.*alfabetica/.test(q)) {
+        const results = profissionais.filter(p => p.crm).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map(p => ({
+          type: 'Q01 • Médico', title: p.nome, detail: `CRM ${p.crm} • Unidade ${p.unidade}`, meta: `UF PE • Data de admissão: ${p.admissao} • Vinculo: ${p.vinculo}`
+        }));
+        render(results, query, 'Q01 — Médicos em ordem alfabética'); return;
+      }
+
+      if (n === 2 || /agendamento.*cancelad|cancelad.*outubro|outubro.*2026/.test(q)) {
+        const results = agendamentos.filter(a => a.situacao === 'Cancelado' && a.data.startsWith('2026-10')).map(a => ({
+          type: 'Q02 • Cancelamento', title: `Agendamento ${a.id}`, detail: `Data: ${a.data} • Hora: ${a.hora}`, meta: `Cancelado em ${a.cancelamento} • Motivo: ${a.motivo}`
+        }));
+        if (!results.length) results.push({ type: 'Q02 • Resultado', title: 'Nenhum cancelamento em outubro de 2026', detail: 'No conjunto de dados atual', meta: 'Os dados cadastrados possuem cancelamento apenas em novembro de 2026.' });
+        render(results, query, 'Q02 — Agendamentos cancelados em outubro de 2026'); return;
+      }
+
+      if (n === 3 || /codigo tuss|preparo.*tempo|procedimento.*tuss/.test(q)) {
+        const results = procedimentos.map(p => ({ type: 'Q03 • Procedimento', title: p.nome, detail: `TUSS ${p.codigo} • ${p.tipo}`, meta: `Preparo: ${p.preparo} • Tempo estimado: ${p.tempo}` }));
+        render(results, query, 'Q03 — Dados dos procedimentos cadastrados'); return;
+      }
+
+      if (n === 4 || /pacientes.*2010|nasc.*2010|mais novo.*mais velho/.test(q)) {
+        const nascidos2010 = pacientes.filter(p => p.nascimento.startsWith('2010'));
+        const maisNovo = [...pacientes].sort((a, b) => b.nascimento.localeCompare(a.nascimento))[0];
+        const maisVelho = [...pacientes].sort((a, b) => a.nascimento.localeCompare(b.nascimento))[0];
+        const results = [{ type: 'Q04 • Comparação', title: 'Nenhum paciente nasceu a partir de 2010', detail: 'Resultado da busca', meta: 'Os nascimentos cadastrados vão de 1975 a 2001.' }, { type: 'Q04 • Mais novo', title: maisNovo.nome, detail: `Nascimento: ${maisNovo.nascimento}`, meta: `Prontuário ${maisNovo.prontuario} • Município: ${maisNovo.municipio}` }, { type: 'Q04 • Mais velho', title: maisVelho.nome, detail: `Nascimento: ${maisVelho.nascimento}`, meta: `Prontuário ${maisVelho.prontuario}` }];
+        render(results, query, 'Q04 — Pacientes que nasceram a partir de 2010'); return;
+      }
+
+      if (n === 5 || /total.*absenteismo|agendamento.*faltou|faltou.*mes/.test(q)) {
+        render([{ type: 'Q05 • Informação', title: 'Não é possível calcular faltas', detail: 'O campo “faltou” não existe no banco', meta: 'A tabela AGENDAMENTO possui situação e cancelamento, mas nenhum registro de ausência pode ser identificado.' }], query, 'Q05 — Absenteísmo mensal dos médicos'); return;
+      }
+
+      if (n === 6 || /medicos.*especialidade|especialidade.*unidade|faixa de agenda|horario.*especialidade/.test(q)) {
+        const results = profissionais.filter(p => p.crm).flatMap(p => p.especialidades.map(especialidade => {
+          const horario = agendas.find(a => a.crm === p.crm);
+          const unidade = unidadePorCodigo(p.unidade);
+          return { type: 'Q06 • Agenda', title: `${p.nome} — ${especialidade}`, detail: unidade.nome, meta: `${horario.dia}: ${horario.inicio} às ${horario.fim} • Vigência até ${horario.vigencia}` };
+        }));
+        render(results, query, 'Q06 — Médicos por especialidade, unidade e agenda'); return;
+      }
+
+      if (n === 7 || /responsavel.*cadastro|pacientes.*responsavel/.test(q)) {
+        const results = pacientes.map(p => ({ type: 'Q07 • Cadastro', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Responsável pelo cadastro: ${p.responsavel}` }));
+        render(results, query, 'Q07 — Pacientes e responsáveis pelo cadastro'); return;
+      }
+
+      if (n === 8 || /operador.*competencia|valor.*pago|glosa|valor apresentado/.test(q)) {
+        render([{ type: 'Q08 • Não cadastrado', title: 'Competência, pagamento e glosa não estão disponíveis', detail: 'Os dados apresentados não possuem operadores associados', meta: 'POSSUI_PLANO relaciona paciente e plano, mas não registra operador, competência, valores pago/apresentado ou glosa.' }], query, 'Q08 — Operadora e competência financeira'); return;
+      }
+
+      if (n === 9 || /operadora.*competencia|operador.*procedimento|quantidade.*procedimento/.test(q)) {
+        render([{ type: 'Q09 • Sem relacionamento', title: 'Não é possível ligar operador ao procedimento', detail: 'Não existe vínculo OPERADORES → procedimento/plano', meta: 'O banco possui operadores e solicitações separadamente, sem chave que associe um operador a uma competência.' }], query, 'Q09 — Operadores e procedimentos'); return;
+      }
+
+      if (n === 10 || /tempo medio.*especialidade|tempo.*marcacao.*consulta/.test(q)) {
+        render([{ type: 'Q10 • Não calculável', title: 'Tempo médio entre marcação e consulta', detail: 'A tabela não associa prontuário ao agendamento', meta: 'Não há data de marcação nem ligação individual entre paciente, especialidade e consulta para o cálculo.' }], query, 'Q10 — Tempo médio por especialidade'); return;
+      }
+
+      if (n === 11 || /exame.*solicitad|nunca.*realizad|quantidade.*especialidade.*solicitante/.test(q)) {
+        const results = procedimentos.map(p => ({ type: 'Q11 • Solicitação', title: p.nome, detail: p.solicitado ? `Solicitado no atendimento ${p.solicitado}` : 'Não consta como solicitado', meta: p.solicitado ? `Data: ${p.data} • Especialidade: ${p.especialidade}` : 'Não há registro de realização no banco.' }));
+        render(results, query, 'Q11 — Exames solicitados e realizados'); return;
+      }
+
+      if (n === 12 || /recomendacao.*retorno|retorno.*mesmo medico|pacientes.*retorno/.test(q)) {
+        render([{ type: 'Q12 • Dados insuficientes', title: 'Não é possível identificar retorno ao mesmo médico', detail: 'Não existe vínculo paciente → atendimento → médico', meta: 'A tabela AGENDAMENTO não possui paciente nem médico; por isso não se pode calcular recomendação ou retorno dentro do prazo.' }], query, 'Q12 — Recomendações de retorno'); return;
+      }
+
+      if (n === 13 || /procedimento.*codigo.*operadora|operadora.*tuss/.test(q)) {
+        render([{ type: 'Q13 • Sem vínculo', title: 'Cobrado por procedimento e operadora', detail: 'Operadoras cadastradas:', meta: operadores.map(o => `${o.nome} — ${o.ans}`).join(' • ') }, { type: 'Q13 • Resultado', title: 'Valor não disponível', detail: 'O banco não relaciona operadora ao TUSS', meta: 'Não há contrato, cobertura ou procedimento associado a operadora cadastrado.' }], query, 'Q13 — Valor cobrado por operadora'); return;
+      }
+
+      if (n === 14 || /pacientes.*2026|atendidos.*2026|tres ou mais especialidades/.test(q)) {
+        render([{ type: 'Q14 • Dados insuficientes', title: 'Pacientes atendidos em 2026 não podem ser contados', detail: 'Sem vínculo paciente → agendamento → atendimento', meta: 'Existem atendimentos em 2026, mas o número de prontuário/paciente não aparece em nenhuma das tabelas desse fluxo.' }], query, 'Q14 — Pacientes atendidos em três especialidades'); return;
+      }
+
+      if (/unidade|clinica|recife|endereco|telefone|horario/.test(q)) {
+        const results = unidades.map(u => ({ type: 'Unidade', title: u.nome, detail: `${u.municipio} • ${u.telefone}`, meta: `${u.endereco} • Horário: ${u.horario}` }));
+        render(results, query); return;
+      }
+
+      if (/especialidade|cardiolog|ortoped|clinica geral/.test(q)) {
+        const results = profissionais.filter(p => p.crm).map(p => ({ type: 'Profissional', title: p.nome, detail: `CRM ${p.crm}`, meta: `${p.especialidades.join(' e ')} • ${unidadePorCodigo(p.unidade).nome}` }));
+        render(results, query); return;
+      }
+
+      if (/paciente|cpf|prontuario|cns/.test(q)) {
+        const results = pacientes.map(p => ({ type: 'Paciente', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Prontuário ${p.prontuario} • CNS ${p.cns} • Plano: ${p.plano}` }));
+        render(results, query); return;
+      }
+
+      if (/procedimento|exame|tuss|preparo/.test(q)) {
+        const results = procedimentos.map(p => ({ type: 'Procedimento', title: p.nome, detail: `TUSS ${p.codigo}`, meta: `${p.tipo} • Preparo: ${p.preparo} • Tempo: ${p.tempo}` }));
+        render(results, query); return;
+      }
+
+      if (/plano|convenio|carencia|operadora/.test(q)) {
+        const results = planos.map(p => ({ type: 'Plano', title: p.nome, detail: `${p.acomodacao} • ${p.abrangencia}`, meta: `Prazo de carência: ${p.carencia} dias` }));
+        render(results, query); return;
+      }
+
+      const terms = q.split(/\s+/).filter(Boolean);
+      const searchable = [];
+      profissionais.forEach(p => searchable.push({ type: 'Profissional', title: p.nome, detail: p.crm ? `CRM ${p.crm}` : p.funcao || p.setor, meta: `${p.cpf} • ${unidadePorCodigo(p.unidade).nome}` }));
+      unidades.forEach(u => searchable.push({ type: 'Unidade', title: u.nome, detail: u.endereco, meta: `${u.municipio} • ${u.telefone}` }));
+      pacientes.forEach(p => searchable.push({ type: 'Paciente', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Prontuário ${p.prontuario} • CNS ${p.cns}` }));
+      procedimentos.forEach(p => searchable.push({ type: 'Procedimento', title: p.nome, detail: `TUSS ${p.codigo}`, meta: p.preparo }));
+      planos.forEach(p => searchable.push({ type: 'Plano', title: p.nome, detail: p.acomodacao, meta: p.abrangencia }));
+      const results = searchable.filter(item => {
+        const text = normalize(`${item.type} ${item.title} ${item.detail} ${item.meta}`);
+        return terms.every(term => text.includes(term));
+      });
+      render(results, query);
+    }
+
+    form.addEventListener('submit', event => { event.preventDefault(); answer(input.value); });
+
+    document.querySelectorAll('[data-query]').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[data-query]').forEach(item => item.classList.remove('active'));
+        button.classList.add('active');
+
+        input.value = button.dataset.query;
+        categoryFilter.value = button.dataset.category || 'Todos';
+
+        if (button.dataset.query) {
+          answer(input.value);
+        } else {
+          categoryFilter.dispatchEvent(new Event('change'));
+        }
+
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    categoryFilter.addEventListener('change', () => {
+      const selectedCategory = categoryFilter.value;
+      const query = input.value;
+      const q = normalize(query);
+
+      let filteredResults = [];
+
+      if (selectedCategory === 'Q01') {
+        filteredResults = profissionais.filter(p => p.crm).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map(p => ({
+          type: 'Q01 • Médico', title: p.nome, detail: `CRM ${p.crm} • Unidade ${p.unidade}`, meta: `UF PE • Data de admissão: ${p.admissao} • Vinculo: ${p.vinculo}`
+        }));
+      } else if (selectedCategory === 'Q02') {
+        filteredResults = agendamentos.filter(a => a.situacao === 'Cancelado' && a.data.startsWith('2026-10')).map(a => ({
+          type: 'Q02 • Cancelamento', title: `Agendamento ${a.id}`, detail: `Data: ${a.data} • Hora: ${a.hora}`, meta: `Cancelado em ${a.cancelamento} • Motivo: ${a.motivo}`
+        }));
+        if (!filteredResults.length) filteredResults.push({ type: 'Q02 • Resultado', title: 'Nenhum cancelamento em outubro de 2026', detail: 'No conjunto de dados atual', meta: 'Os dados cadastrados possuem cancelamento apenas em novembro de 2026.' });
+      } else if (selectedCategory === 'Q03') {
+        filteredResults = procedimentos.map(p => ({ type: 'Q03 • Procedimento', title: p.nome, detail: `TUSS ${p.codigo} • ${p.tipo}`, meta: `Preparo: ${p.preparo} • Tempo estimado: ${p.tempo}` }));
+      } else if (selectedCategory === 'Paciente') {
+        filteredResults = pacientes.map(p => ({ type: 'Paciente', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Prontuário ${p.prontuario} • CNS ${p.cns} • Plano: ${p.plano}` }));
+      } else if (selectedCategory === 'Unidade') {
+        filteredResults = unidades.map(u => ({ type: 'Unidade', title: u.nome, detail: `${u.municipio} • ${u.telefone}`, meta: `${u.endereco} • Horário: ${u.horario}` }));
+      } else if (selectedCategory === 'Plano') {
+        filteredResults = planos.map(p => ({ type: 'Plano', title: p.nome, detail: `${p.acomodacao} • ${p.abrangencia}`, meta: `Prazo de carência: ${p.carencia} dias` }));
+      } else if (selectedCategory === 'Agenda') {
+        filteredResults = profissionais.filter(p => p.crm).flatMap(p => p.especialidades.map(especialidade => {
+          const horario = agendas.find(a => a.crm === p.crm);
+          const unidade = unidadePorCodigo(p.unidade);
+          return { type: 'Q06 • Agenda', title: `${p.nome} — ${especialidade}`, detail: unidade.nome, meta: `${horario.dia}: ${horario.inicio} às ${horario.fim} • Vigência até ${horario.vigencia}` };
+        }));
+      } else {
+        filteredResults = profissionais.filter(p => p.crm).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR')).map(p => ({
+          type: 'Q01 • Médico', title: p.nome, detail: `CRM ${p.crm} • Unidade ${p.unidade}`, meta: `UF PE • Data de admissão: ${p.admissao} • Vinculo: ${p.vinculo}`
+        }));
+        const results = agendamentos.filter(a => a.situacao === 'Cancelado' && a.data.startsWith('2026-10')).map(a => ({
+          type: 'Q02 • Cancelamento', title: `Agendamento ${a.id}`, detail: `Data: ${a.data} • Hora: ${a.hora}`, meta: `Cancelado em ${a.cancelamento} • Motivo: ${a.motivo}`
+        }));
+        if (!results.length) results.push({ type: 'Q02 • Resultado', title: 'Nenhum cancelamento em outubro de 2026', detail: 'No conjunto de dados atual', meta: 'Os dados cadastrados possuem cancelamento apenas em novembro de 2026.' });
+        filteredResults = [...filteredResults, ...results];
+        const resultsTUSS = procedimentos.map(p => ({ type: 'Q03 • Procedimento', title: p.nome, detail: `TUSS ${p.codigo} • ${p.tipo}`, meta: `Preparo: ${p.preparo} • Tempo estimado: ${p.tempo}` }));
+        filteredResults = [...filteredResults, ...resultsTUSS];
+        const resultsPaciente = pacientes.map(p => ({ type: 'Paciente', title: p.nome, detail: `CPF ${p.cpf}`, meta: `Prontuário ${p.prontuario} • CNS ${p.cns} • Plano: ${p.plano}` }));
+        filteredResults = [...filteredResults, ...resultsPaciente];
+        const resultsUnidade = unidades.map(u => ({ type: 'Unidade', title: u.nome, detail: `${u.municipio} • ${u.telefone}`, meta: `${u.endereco} • Horário: ${u.horario}` }));
+        filteredResults = [...filteredResults, ...resultsUnidade];
+        const resultsPlano = planos.map(p => ({ type: 'Plano', title: p.nome, detail: `${p.acomodacao} • ${p.abrangencia}`, meta: `Prazo de carência: ${p.carencia} dias` }));
+        filteredResults = [...filteredResults, ...resultsPlano];
+        const resultsAgenda = profissionais.filter(p => p.crm).flatMap(p => p.especialidades.map(especialidade => {
+          const horario = agendas.find(a => a.crm === p.crm);
+          const unidade = unidadePorCodigo(p.unidade);
+          return { type: 'Q06 • Agenda', title: `${p.nome} — ${especialidade}`, detail: unidade.nome, meta: `${horario.dia}: ${horario.inicio} às ${horario.fim} • Vigência até ${horario.vigencia}` };
+        }));
+        filteredResults = [...filteredResults, ...resultsAgenda];
+      }
+
+      const terms = normalize(query).split(/\s+/).filter(Boolean);
+      filteredResults = filteredResults.filter(item => {
+        const text = normalize(`${item.type} ${item.title} ${item.detail} ${item.meta}`);
+        return terms.every(term => text.includes(term));
+      });
+
+      render(filteredResults, query);
+    });
+
+    render([], '');
+    cards.innerHTML = '<div class="empty"><strong>Pesquise nos dados da clínica</strong><p>Use uma pergunta completa ou digite nome, CPF, CRM, unidade, especialidade, TUSS ou plano.</p></div>';
+  </script>
+</body>
+</html>
