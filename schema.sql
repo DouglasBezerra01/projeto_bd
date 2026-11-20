@@ -155,6 +155,8 @@ CREATE TABLE AGENDAMENTO (
     motivo_cancelamento TEXT,
     numero_sala INTEGER,
     matricula_administracao INTEGER,
+    cpf_paciente VARCHAR(14),
+    matricula_medico INTEGER,
     FOREIGN KEY (numero_sala) REFERENCES SALAS (numero_sala),
     FOREIGN KEY (matricula_administracao) REFERENCES ADMINISTRACAO (matricula_profissionais),
     FOREIGN KEY (cpf_paciente) REFERENCES PACIENTES (cpf),
