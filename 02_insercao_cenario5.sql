@@ -47,7 +47,7 @@ INSERT INTO MEDICO_ESPECIALIDADE (matricula_medico, codigo_especialidade) VALUES
 INSERT INTO PACIENTES (cpf, nome, data_nascimento, sexo, nome_mae, endereco, telefone, nome_responsavel) VALUES
 ('777.777.777-77', 'Ana Beatriz Souza', '1992-06-15', 'Feminino', 'Maria das Graças Souza', 'Rua do Sol, 120', '(81) 98888-1111', 'Carlos Souza'),
 ('888.888.888-88', 'Marcos Vinícius Oliveira', '1975-12-08', 'Masculino', 'Helena Oliveira', 'Av. Boa Vista, 890', '(81) 98888-2222', 'Roberto Oliveira'),
-('999.999.999-99', 'Juliana Mendes', '2001-03-30', 'Feminino', 'Cláudia Mendes', 'Rua da Aurora, 45', '(81) 98888-3333'),
+('999.999.999-99', 'Juliana Mendes', '2001-03-30', 'Feminino', 'Cláudia Mendes', 'Rua da Aurora, 45', '(81) 98888-3333', NULL),
 ('101.101.101-10', 'Lucas Gabriel Ferreira', '2012-05-14', 'Masculino', 'Patrícia Ferreira', 'Rua das Acácias, 78', '(81) 98888-4444', 'Patrícia Ferreira'),
 ('202.202.202-20', 'Sofia Ribeiro Lima', '2016-09-22', 'Feminino', 'Camila Ribeiro', 'Av. Conselheiro Aguiar, 310', '(81) 98888-5555', 'Ricardo Lima');
 
@@ -86,15 +86,16 @@ INSERT INTO SALAS (numero_sala, capacidade, equipamento) VALUES
 (3, 2, 'Aparelho de Eletrocardiograma, Maca');
 
 -- 16. AGENDAMENTO
-INSERT INTO AGENDAMENTO (id_agendamento, data, hora, canal, forma_pagamento, situacao, data_cancelamento, motivo_cancelamento, numero_sala, matricula_administracao) VALUES
-(501, '2026-11-10', '09:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101),
-(502, '2026-11-12', '10:30:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101),
-(503, '2026-11-15', '14:00:00', 'Telefone', 'Particular', 'Cancelado', '2026-11-14', 'Imprevisto pessoal do paciente', 2, 101),
-(504, '2026-11-16', '08:30:00', 'WhatsApp', 'Convênio', 'faltou', NULL, NULL, 1, 101, '101.101.101-10', 106),
-(505, '2026-11-17', '15:00:00', 'Telefone', 'Particular', 'faltou', NULL, NULL, 2, 101, '202.202.202-20', 103),
-(506, '2026-09-01', '09:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
-(507, '2026-09-20', '09:30:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
-(508, '2026-08-10', '11:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '999.999.999-99', 103);
+INSERT INTO AGENDAMENTO (id_agendamento, data_marcacao, data, hora, canal, forma_pagamento, situacao, data_cancelamento, motivo_cancelamento, numero_sala, matricula_administracao, cpf_paciente, matricula_medico) VALUES
+(501, '2026-11-05', '2026-11-10', '09:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
+(502, '2026-11-08', '2026-11-12', '10:30:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '888.888.888-88', 102),
+(503, '2026-11-10', '2026-11-15', '14:00:00', 'Telefone', 'Particular', 'Cancelado', '2026-11-14', 'Imprevisto pessoal do paciente', 2, 101, '999.999.999-99', 103),
+(504, '2026-11-10', '2026-11-16', '08:30:00', 'WhatsApp', 'Convênio', 'faltou', NULL, NULL, 1, 101, '101.101.101-10', 106),
+(505, '2026-11-12', '2026-11-17', '15:00:00', 'Telefone', 'Particular', 'faltou', NULL, NULL, 2, 101, '202.202.202-20', 103),
+(506, '2026-08-25', '2026-09-01', '09:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
+(507, '2026-09-10', '2026-09-20', '09:30:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
+(508, '2026-08-01', '2026-08-10', '11:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '999.999.999-99', 103),
+(509, '2026-10-01', '2026-10-05', '10:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '777.777.777-77', 103);
 
 -- 17. ATENDIMENTO
 INSERT INTO ATENDIMENTO (id_atendimento, id_agendamento, hora_inicio, hora_termino, queixa_principal, teses_diagnosticas_CID, conduta, prazo_retorno) VALUES
@@ -102,7 +103,8 @@ INSERT INTO ATENDIMENTO (id_atendimento, id_agendamento, hora_inicio, hora_termi
 (902, 502, '10:32:00', '11:00:00', 'Dor no joelho direito após caminhada', 'M25.5 - Dor articular', 'Prescrito anti-inflamatório e solicitado raio-X.', 15),
 (903, 506, '09:05:00', '09:30:00', 'Acompanhamento de pressão alta', 'I10 - Hipertensão essencial', 'Ajuste de medicação e retorno em 30 dias.', 30),
 (904, 507, '09:35:00', '09:55:00', 'Retorno para avaliação de pressão arterial', 'I10 - Hipertensão essencial', 'Pressão controlada. Manter medicação.', NULL),
-(905, 508, '11:05:00', '11:30:00', 'Dor lombar persistente', 'M54.5 - Dor lombar baixa', 'Fisioterapia e retorno em 15 dias.', 15);
+(905, 508, '11:05:00', '11:30:00', 'Dor lombar persistente', 'M54.5 - Dor lombar baixa', 'Fisioterapia e retorno em 15 dias.', 15),
+(906, 509, '10:05:00', '10:30:00', 'Dor no ombro direito', 'M75 - Lesões do ombro', 'Solicitado ultrassom.', 15);
 
 -- 18. PROCEDIMENTO_EXAME (Inserindo exame principal antes do dependente por causa do auto-relacionamento)
 INSERT INTO PROCEDIMENTO_EXAME (codigo_TUSS, nome, tipo, preparo_exigido, tempo_estimado, cod_exame_princ) VALUES
@@ -111,9 +113,9 @@ INSERT INTO PROCEDIMENTO_EXAME (codigo_TUSS, nome, tipo, preparo_exigido, tempo_
 ('40101029', 'Teste Ergométrico', 'Exame Cardiológico', 'Usar roupas leves e tênis; evitar cafeína 3h antes.', '00:40:00', '40101010');
 
 -- 19. SOLICITA
-INSERT INTO SOLICITA (id_atendimento, codigo_TUSS_procedimento, data_solicitacao, indicacao_clinica, carater) VALUES
-(901, '40101010', '2026-11-10', 'Investigação de palpitações', 'Eletivo'),
-(902, '40805018', '2026-11-12', 'Avaliação de dor articular pós-esforço', 'Urgência'),
+INSERT INTO SOLICITA (id_atendimento, codigo_TUSS_procedimento, data_solicitacao, indicacao_clinica, carater, status_exame) VALUES
+(901, '40101010', '2026-11-10', 'Investigação de palpitações', 'Eletivo', 'Realizado'),
+(902, '40805018', '2026-11-12', 'Avaliação de dor articular pós-esforço', 'Urgência', 'Realizado'),
 (903, '40101029', '2026-09-01', 'Avaliação cardiológica de esforço', 'Eletivo', 'Solicitado');
 
 -- 20. MEDICAMENTOS

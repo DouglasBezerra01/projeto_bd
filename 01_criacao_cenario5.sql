@@ -146,6 +146,7 @@ CREATE TABLE SALAS (
 -- 16. Tabela AGENDAMENTO
 CREATE TABLE AGENDAMENTO (
     id_agendamento INTEGER PRIMARY KEY,
+    data_marcacao DATE,
     data DATE,
     hora TIME,
     canal VARCHAR(50),
