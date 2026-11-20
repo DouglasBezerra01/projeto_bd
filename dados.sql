@@ -9,7 +9,8 @@ INSERT INTO PROFISSIONAIS (matricula, nome, cpf, data_nascimento, telefone, emai
 (102, 'Dra. Mariana Costa', '222.222.222-22', '1980-09-25', '(81) 99999-2222', 'mariana.costa@clinica.com', '2016-05-10', 'PJ', 1),
 (103, 'Dr. Roberto Almeida', '333.333.333-33', '1978-11-03', '(81) 99999-3333', 'roberto.almeida@clinica.com', '2020-02-01', 'PJ', 2),
 (104, 'Fernanda Lima', '444.444.444-44', '1990-07-19', '(81) 99999-4444', 'fernanda.lima@clinica.com', '2019-11-12', 'CLT', 1),
-(105, 'João Pedro Santos', '555.555.555-55', '1995-02-28', '(81) 99999-5555', 'joao.santos@clinica.com', '2021-06-20', 'CLT', 2);
+(105, 'João Pedro Santos', '555.555.555-55', '1995-02-28', '(81) 99999-5555', 'joao.santos@clinica.com', '2021-06-20', 'CLT', 2),
+(106, 'Dr. Henrique Vasconcelos', '666.666.666-66', '1982-03-14', '(81) 99999-6666', 'henrique.v@clinica.com', '2022-04-10', 'cooperado', 1);
 
 -- 3. ADMINISTRACAO
 INSERT INTO ADMINISTRACAO (matricula_profissionais, setor) VALUES
@@ -18,7 +19,8 @@ INSERT INTO ADMINISTRACAO (matricula_profissionais, setor) VALUES
 -- 4. MEDICO
 INSERT INTO MEDICO (matricula_profissionais, crm, uf_registro) VALUES
 (102, '12345-PE', 'PE'),
-(103, '67890-PE', 'PE');
+(103, '67890-PE', 'PE'),
+(106, '54321-PE', 'PE');
 
 -- 5. ENFERMEIRO
 INSERT INTO ENFERMEIRO (matricula_profissionais, corem, uf_respectivo) VALUES
@@ -38,19 +40,24 @@ INSERT INTO ESPECIALIDADE (codigo, nome, conselho) VALUES
 INSERT INTO MEDICO_ESPECIALIDADE (matricula_medico, codigo_especialidade) VALUES
 (102, 1),
 (102, 2),
-(103, 3);
+(103, 3),
+(106, 1);
 
 -- 9. PACIENTES
-INSERT INTO PACIENTES (cpf, nome, data_nascimento, sexo, nome_mae, endereco, telefone) VALUES
-('777.777.777-77', 'Ana Beatriz Souza', '1992-06-15', 'Feminino', 'Maria das Graças Souza', 'Rua do Sol, 120', '(81) 98888-1111'),
-('888.888.888-88', 'Marcos Vinícius Oliveira', '1975-12-08', 'Masculino', 'Helena Oliveira', 'Av. Boa Vista, 890', '(81) 98888-2222'),
-('999.999.999-99', 'Juliana Mendes', '2001-03-30', 'Feminino', 'Cláudia Mendes', 'Rua da Aurora, 45', '(81) 98888-3333');
+INSERT INTO PACIENTES (cpf, nome, data_nascimento, sexo, nome_mae, endereco, telefone, nome_responsavel) VALUES
+('777.777.777-77', 'Ana Beatriz Souza', '1992-06-15', 'Feminino', 'Maria das Graças Souza', 'Rua do Sol, 120', '(81) 98888-1111', 'Carlos Souza'),
+('888.888.888-88', 'Marcos Vinícius Oliveira', '1975-12-08', 'Masculino', 'Helena Oliveira', 'Av. Boa Vista, 890', '(81) 98888-2222', 'Roberto Oliveira'),
+('999.999.999-99', 'Juliana Mendes', '2001-03-30', 'Feminino', 'Cláudia Mendes', 'Rua da Aurora, 45', '(81) 98888-3333'),
+('101.101.101-10', 'Lucas Gabriel Ferreira', '2012-05-14', 'Masculino', 'Patrícia Ferreira', 'Rua das Acácias, 78', '(81) 98888-4444', 'Patrícia Ferreira'),
+('202.202.202-20', 'Sofia Ribeiro Lima', '2016-09-22', 'Feminino', 'Camila Ribeiro', 'Av. Conselheiro Aguiar, 310', '(81) 98888-5555', 'Ricardo Lima');
 
 -- 10. PRONTUARIO
 INSERT INTO PRONTUARIO (numero_prontuario, cpf_paciente, cns) VALUES
 (1001, '777.777.777-77', '700001112223334'),
 (1002, '888.888.888-88', '700004445556667'),
-(1003, '999.999.999-99', '700007778889990');
+(1003, '999.999.999-99', '700007778889990'),
+(1004, '101.101.101-10', '700009998887771'),
+(1005, '202.202.202-20', '700009998887772');
 
 -- 11. EVOLUCAO (seq_evolucao é AUTOINCREMENT, não precisa informar)
 INSERT INTO EVOLUCAO (numero_prontuario, matricula_profissional, data_hora, peso, altura, frequencia_cardiaca, temperatura, pressao, texto_evolucao) VALUES
@@ -82,12 +89,20 @@ INSERT INTO SALAS (numero_sala, capacidade, equipamento) VALUES
 INSERT INTO AGENDAMENTO (id_agendamento, data, hora, canal, forma_pagamento, situacao, data_cancelamento, motivo_cancelamento, numero_sala, matricula_administracao) VALUES
 (501, '2026-11-10', '09:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101),
 (502, '2026-11-12', '10:30:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101),
-(503, '2026-11-15', '14:00:00', 'Telefone', 'Particular', 'Cancelado', '2026-11-14', 'Imprevisto pessoal do paciente', 2, 101);
+(503, '2026-11-15', '14:00:00', 'Telefone', 'Particular', 'Cancelado', '2026-11-14', 'Imprevisto pessoal do paciente', 2, 101),
+(504, '2026-11-16', '08:30:00', 'WhatsApp', 'Convênio', 'faltou', NULL, NULL, 1, 101, '101.101.101-10', 106),
+(505, '2026-11-17', '15:00:00', 'Telefone', 'Particular', 'faltou', NULL, NULL, 2, 101, '202.202.202-20', 103),
+(506, '2026-09-01', '09:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
+(507, '2026-09-20', '09:30:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102),
+(508, '2026-08-10', '11:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '999.999.999-99', 103);
 
 -- 17. ATENDIMENTO
 INSERT INTO ATENDIMENTO (id_atendimento, id_agendamento, hora_inicio, hora_termino, queixa_principal, teses_diagnosticas_CID, conduta, prazo_retorno) VALUES
 (901, 501, '09:05:00', '09:35:00', 'Fadiga e palpitações ocasionais', 'R00.2 - Palpitações', 'Solicitado eletrocardiograma e exames laboratoriais de rotina.', 30),
-(902, 502, '10:32:00', '11:00:00', 'Dor no joelho direito após caminhada', 'M25.5 - Dor articular', 'Prescrito anti-inflamatório e solicitado raio-X.', 15);
+(902, 502, '10:32:00', '11:00:00', 'Dor no joelho direito após caminhada', 'M25.5 - Dor articular', 'Prescrito anti-inflamatório e solicitado raio-X.', 15),
+(903, 506, '09:05:00', '09:30:00', 'Acompanhamento de pressão alta', 'I10 - Hipertensão essencial', 'Ajuste de medicação e retorno em 30 dias.', 30),
+(904, 507, '09:35:00', '09:55:00', 'Retorno para avaliação de pressão arterial', 'I10 - Hipertensão essencial', 'Pressão controlada. Manter medicação.', NULL),
+(905, 508, '11:05:00', '11:30:00', 'Dor lombar persistente', 'M54.5 - Dor lombar baixa', 'Fisioterapia e retorno em 15 dias.', 15);
 
 -- 18. PROCEDIMENTO_EXAME (Inserindo exame principal antes do dependente por causa do auto-relacionamento)
 INSERT INTO PROCEDIMENTO_EXAME (codigo_TUSS, nome, tipo, preparo_exigido, tempo_estimado, cod_exame_princ) VALUES
@@ -98,7 +113,8 @@ INSERT INTO PROCEDIMENTO_EXAME (codigo_TUSS, nome, tipo, preparo_exigido, tempo_
 -- 19. SOLICITA
 INSERT INTO SOLICITA (id_atendimento, codigo_TUSS_procedimento, data_solicitacao, indicacao_clinica, carater) VALUES
 (901, '40101010', '2026-11-10', 'Investigação de palpitações', 'Eletivo'),
-(902, '40805018', '2026-11-12', 'Avaliação de dor articular pós-esforço', 'Urgência');
+(902, '40805018', '2026-11-12', 'Avaliação de dor articular pós-esforço', 'Urgência'),
+(903, '40101029', '2026-09-01', 'Avaliação cardiológica de esforço', 'Eletivo', 'Solicitado');
 
 -- 20. MEDICAMENTOS
 INSERT INTO MEDICAMENTOS (codigo_medicamento, principio_ativo, nome_comercial, apresentacao, concentracao, tarja) VALUES
@@ -117,3 +133,17 @@ INSERT INTO AGENDAS (crm_medico, codigo_unidade, dia_semana, hora_inicio, hora_t
 ('12345-PE', 1, 'Segunda-feira', '08:00:00', '12:00:00', '2026-12-31', '00:30:00'),
 ('12345-PE', 1, 'Quarta-feira', '14:00:00', '18:00:00', '2026-12-31', '00:30:00'),
 ('67890-PE', 2, 'Terça-feira', '09:00:00', '15:00:00', '2026-12-31', '00:30:00');
+
+-- 23. GUIAS
+INSERT INTO GUIAS (id_guia, id_atendimento, cnpj_operadora, competencia, valor_apresentado, valor_pago, valor_glosado) VALUES
+(1, 901, '12.345.678/0001-99', '2026-11', 350.00, 300.00, 50.00),
+(2, 902, '98.765.432/0001-11', '2026-11', 280.00, 280.00, 0.00),
+(3, 903, '12.345.678/0001-99', '2026-09', 420.00, 340.00, 80.00);
+
+-- 24. TABELA_PRECOS
+INSERT INTO TABELA_PRECOS (id_preco, codigo_TUSS_procedimento, cnpj_operadora, valor, data_vigencia) VALUES
+(1, '40101010', '12.345.678/0001-99', 120.00, '2025-01-01'),
+(2, '40101010', '12.345.678/0001-99', 135.00, '2025-07-01'),
+(3, '40101010', '12.345.678/0001-99', 150.00, '2026-01-01'),
+(4, '40101010', NULL, 200.00, '2026-01-01'),
+(5, '40805018', '98.765.432/0001-11', 180.00, '2026-01-01');
