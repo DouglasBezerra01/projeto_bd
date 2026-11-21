@@ -244,7 +244,25 @@ CREATE TABLE AGENDAS (
     FOREIGN KEY (codigo_unidade) REFERENCES UNIDADES (codigo)
 );
 
--- 23. Tabela GUIAS
+-- 23. Tabela TABELA_PRECOS
+CREATE TABLE TABELA_PRECOS (
+    id_preco INTEGER PRIMARY KEY,
+    id_atendimento INTEGER NOT NULL,
+    codigo_TUSS VARCHAR(20) NOT NULL,
+    cnpj_operadora VARCHAR(18) NOT NULL,
+    id_precos INTEGER NOT NULL,
+    competencia VARCHAR(7) NOT NULL,
+    valor_apresentado DECIMAL(10, 2) NOT NULL,
+    valor_pago DECIMAL(10, 2) NOT NULL,
+    valor DECIMAL(10, 2) NOT NULL,
+    data_vigencia DATE NOT NULL,
+    FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
+    FOREIGN KEY (cnpj_operadora) REFERENCES OPERADORES (cnpj),
+    FOREIGN KEY (codigo_TUSS) REFERENCES PROCEDIMENTO_EXAME (codigo_TUSS),
+    FOREIGN KEY (id_precos) REFERENCES TABELA_PRECOS (id_preco)
+);
+
+-- 24. Tabela GUIAS
 CREATE TABLE GUIAS (
     id_guia INTEGER PRIMARY KEY,
     id_atendimento INTEGER NOT NULL,
@@ -255,20 +273,5 @@ CREATE TABLE GUIAS (
     valor_glosado DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
     FOREIGN KEY (cnpj_operadora) REFERENCES OPERADORES (cnpj)
-);
 
--- 24. Tabela TABELA_PRECO
-CREATE TABLE TABELA_PRECOS (
-    id_preco INTEGER PRIMARY KEY,
-    id_atendimento INTEGER NOT NULL,
-    cnpj_operadora VARCHAR(18) NOT NULL,
-    id_precos INTEGER NOT NULL,
-    competencia VARCHAR(7) NOT NULL,
-    valor_apresentado DECIMAL(10, 2) NOT NULL,
-    valor_pago DECIMAL(10, 2) NOT NULL,
-    valor DECIMAL(10, 2) NOT NULL,
-    data_vigencia DATE NOT NULL,
-    FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
-    FOREIGN KEY (cnpj_operadora) REFERENCES OPERADORES (cnpj),
-    FOREIGN KEY (id_precos) REFERENCES TABELA_PRECOS (id_preco)
 );
