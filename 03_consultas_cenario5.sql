@@ -29,7 +29,8 @@ SELECT
     preparo_exigido, 
     tempo_estimado
 FROM PROCEDIMENTO_EXAME
-WHERE preparo_exigido IS NOT NULL 
+WHERE tipo LIKE 'Exame%' 
+  AND preparo_exigido IS NOT NULL
   AND preparo_exigido != '';
 
 -- Q04: Quais pacientes nasceram a partir de [2010]? Mostre número de prontuário, nome, data de nascimento e município.
@@ -37,7 +38,7 @@ SELECT
     pr.numero_prontuario, 
     pa.nome, 
     pa.data_nascimento, 
-    pa.endereco 
+    pa.municipio
 FROM PACIENTES pa
 JOIN PRONTUARIO pr ON pa.cpf = pr.cpf_paciente
 WHERE pa.data_nascimento >= '2010-01-01'
@@ -95,7 +96,7 @@ SELECT
     SUM(g.valor_apresentado) AS total_apresentado,
     SUM(g.valor_pago) AS total_pago,
     SUM(g.valor_glosado) AS total_glosado,
-    (SUM(g.valor_glosado) * 100.0 / SUM(g.valor_apresentado)) AS percentual_glosa
+    ROUND(SUM(g.valor_glosado) * 100.0 / NULLIF(SUM(g.valor_apresentado), 0), 2) AS percentual_glosa
 FROM GUIAS g
 JOIN OPERADORES o ON g.cnpj_operadora = o.cnpj
 GROUP BY o.razao_social, g.competencia;
@@ -106,10 +107,8 @@ GROUP BY o.razao_social, g.competencia;
 -- Q10: Qual o tempo médio, em dias, entre a data da marcação e a data da consulta, por especialidade?
 SELECT 
     e.nome AS especialidade,
-    -- JULIANDAY converte a data para dias no SQLite, permitindo subtração direta
     ROUND(AVG(JULIANDAY(a.data) - JULIANDAY(a.data_marcacao)), 1) AS tempo_medio_dias
 FROM AGENDAMENTO a
-JOIN MEDICO_ESPECIALIDADE me ON a.matricula_medico = me.matricula_medico
 JOIN ESPECIALIDADE e ON me.codigo_especialidade = e.codigo
 WHERE a.situacao = 'Realizado'
 GROUP BY e.nome;
@@ -122,7 +121,6 @@ SELECT
 FROM SOLICITA s
 JOIN ATENDIMENTO at ON s.id_atendimento = at.id_atendimento
 JOIN AGENDAMENTO a ON at.id_agendamento = a.id_agendamento
-JOIN MEDICO_ESPECIALIDADE me ON a.matricula_medico = me.matricula_medico
 JOIN ESPECIALIDADE e ON me.codigo_especialidade = e.codigo
 WHERE s.status_exame = 'Solicitado'
 GROUP BY e.nome;
@@ -172,11 +170,10 @@ WHERE tp.codigo_TUSS_procedimento = '40101010'
 -- Q14: Quais pacientes foram atendidos em três ou mais especialidades diferentes em [2026]?
 SELECT 
     p.nome,
-    COUNT(DISTINCT me.codigo_especialidade) AS qtd_especialidades_diferentes
+    COUNT(DISTINCT a.codigo_especialidade) AS qtd_especialidades_diferentes
 FROM PACIENTES p
 JOIN AGENDAMENTO a ON p.cpf = a.cpf_paciente
 JOIN ATENDIMENTO at ON a.id_agendamento = at.id_agendamento
-JOIN MEDICO_ESPECIALIDADE me ON a.matricula_medico = me.matricula_medico
 WHERE a.data LIKE '2026-%'
 GROUP BY p.cpf, p.nome
-HAVING COUNT(DISTINCT me.codigo_especialidade) >= 3;
+HAVING COUNT(DISTINCT a.codigo_especialidade) >= 3;
