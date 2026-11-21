@@ -59,10 +59,10 @@ INSERT INTO PRONTUARIO (numero_prontuario, cpf_paciente, cns) VALUES
 (1004, '101.101.101-10', '700009998887771'),
 (1005, '202.202.202-20', '700009998887772');
 
--- 11. EVOLUCAO (seq_evolucao é AUTOINCREMENT, não precisa informar)
-INSERT INTO EVOLUCAO (numero_prontuario, matricula_profissional, data_hora, peso, altura, frequencia_cardiaca, temperatura, pressao, texto_evolucao) VALUES
-(1001, 104, '2026-11-10 08:30:00', 62.50, 1.65, 76, 36.50, '120/80', 'Paciente relata leve cansaço aos esforços. Sinais vitais estáveis.'),
-(1002, 102, '2026-11-12 10:15:00', 84.00, 1.78, 82, 36.80, '140/90', 'Paciente hipertenso em acompanhamento regular. Orientado sobre dieta hipossódica.');
+-- 11. OPERADORES
+INSERT INTO OPERADORES (cnpj, razao_social, registro_ans, contato_administrativo) VALUES
+('12.345.678/0001-99', 'Operadora Saúde Brasil S.A.', 'ANS-345678', 'contato@saudebrasil.com.br'),
+('98.765.432/0001-11', 'Vida Plena Assistência Médica Ltda', 'ANS-987654', 'convenios@vidaplena.com.br');
 
 -- 12. PLANOS
 INSERT INTO PLANOS (codigo, nome, tipo_acomodacao, abrangencia, prazo_carencia, cnpj_operadora) VALUES
@@ -73,11 +73,6 @@ INSERT INTO PLANOS (codigo, nome, tipo_acomodacao, abrangencia, prazo_carencia, 
 INSERT INTO POSSUI_PLANO (numero_prontuario, codigo_plano, numero_carteirinha, data_inicio, data_fim, condicao) VALUES
 (1001, 10, 'CART-998877', '2024-01-01', '2027-01-01', 'Ativo'),
 (1002, 20, 'CART-112233', '2023-05-15', '2026-12-31', 'Ativo');
-
--- 14. OPERADORES
-INSERT INTO OPERADORES (cnpj, razao_social, registro_ans, contato_administrativo) VALUES
-('12.345.678/0001-99', 'Operadora Saúde Brasil S.A.', 'ANS-345678', 'contato@saudebrasil.com.br'),
-('98.765.432/0001-11', 'Vida Plena Assistência Médica Ltda', 'ANS-987654', 'convenios@vidaplena.com.br');
 
 -- 15. SALAS
 INSERT INTO SALAS (numero_sala, capacidade, equipamento) VALUES
@@ -95,7 +90,12 @@ INSERT INTO AGENDAMENTO (id_agendamento, data_marcacao, data, hora, canal, forma
 (506, '2026-08-25', '2026-09-01', '09:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102, 1),
 (507, '2026-09-10', '2026-09-20', '09:30:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102, 2),
 (508, '2026-08-01', '2026-08-10', '11:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '999.999.999-99', 103, 3),
-(509, '2026-10-01', '2026-10-05', '10:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '777.777.777-77', 103, 3);
+(509, '2026-10-01', '2026-10-05', '10:00:00', 'WhatsApp', 'Convênio', 'Realizado', NULL, NULL, 2, 101, '777.777.777-77', 103, 3),
+(510, '2026-09-28', '2026-10-02', '14:00:00', 'Telefone', 'Convênio', 'Cancelado', '2026-10-01', 'Solicitação do paciente', 2, 101, '999.999.999-99', 103, 3),
+(511, '2026-10-01', '2026-10-08', '08:30:00', 'WhatsApp', 'Convênio', 'faltou', NULL, NULL, 1, 101, '101.101.101-10', 106, 1),
+(512, '2026-11-18', '2026-11-28', '11:00:00', 'Presencial', 'Particular', 'Agendado', NULL, NULL, 2, 101, '202.202.202-20', 103, 3),
+(513, '2026-11-20', '2026-12-10', '10:00:00', 'WhatsApp', 'Convênio', 'Agendado', NULL, NULL, 1, 101, '888.888.888-88', 102, 2),
+(514, '2026-11-01', '2026-11-19', '10:00:00', 'Presencial', 'Convênio', 'Realizado', NULL, NULL, 1, 101, '777.777.777-77', 102, 1);
 
 -- 17. ATENDIMENTO
 INSERT INTO ATENDIMENTO (id_atendimento, id_agendamento, hora_inicio, hora_termino, queixa_principal, teses_diagnosticas_CID, conduta, prazo_retorno) VALUES
@@ -104,7 +104,13 @@ INSERT INTO ATENDIMENTO (id_atendimento, id_agendamento, hora_inicio, hora_termi
 (903, 506, '09:05:00', '09:30:00', 'Acompanhamento de pressão alta', 'I10 - Hipertensão essencial', 'Ajuste de medicação e retorno em 30 dias.', 30),
 (904, 507, '09:35:00', '09:55:00', 'Retorno para avaliação de pressão arterial', 'I10 - Hipertensão essencial', 'Pressão controlada. Manter medicação.', NULL),
 (905, 508, '11:05:00', '11:30:00', 'Dor lombar persistente', 'M54.5 - Dor lombar baixa', 'Fisioterapia e retorno em 15 dias.', 15),
-(906, 509, '10:05:00', '10:30:00', 'Dor no ombro direito', 'M75 - Lesões do ombro', 'Solicitado ultrassom.', 15);
+(906, 509, '10:05:00', '10:30:00', 'Dor no ombro direito', 'M75 - Lesões do ombro', 'Solicitado ultrassom.', 15),
+(907, 514, '10:05:00', '10:30:00', 'Acompanhamento clínico', 'Z09 - Exame de seguimento após tratamento', 'Sinais vitais estáveis, mantido acompanhamento.', NULL);
+
+-- 11. EVOLUCAO (cada registro pertence a um atendimento e a um profissional)
+INSERT INTO EVOLUCAO (id_atendimento, matricula_profissional, data_hora, peso, altura, frequencia_cardiaca, temperatura, pressao, texto_evolucao) VALUES
+(901, 104, '2026-11-10 08:30:00', 62.50, 1.65, 76, 36.50, '120/80', 'Paciente relata leve cansaço aos esforços. Sinais vitais estáveis.'),
+(902, 102, '2026-11-12 10:15:00', 84.00, 1.78, 82, 36.80, '140/90', 'Paciente hipertenso em acompanhamento regular. Orientado sobre dieta hipossódica.');
 
 -- 18. PROCEDIMENTO_EXAME (Inserindo exame principal antes do dependente por causa do auto-relacionamento)
 INSERT INTO PROCEDIMENTO_EXAME (codigo_TUSS, nome, tipo, preparo_exigido, tempo_estimado, cod_exame_princ) VALUES
@@ -134,6 +140,8 @@ INSERT INTO PRESCREVE (id_atendimento, codigo_medicamento, seq_item, quantidade,
 INSERT INTO AGENDAS (crm_medico, codigo_unidade, dia_semana, hora_inicio, hora_termino, periodo_vigencia, duracao_consulta) VALUES
 ('12345-PE', 1, 'Segunda-feira', '08:00:00', '12:00:00', '2026-12-31', '00:30:00'),
 ('12345-PE', 1, 'Quarta-feira', '14:00:00', '18:00:00', '2026-12-31', '00:30:00'),
+('12345-PE', 1, 'Sexta-feira', '08:00:00', '12:00:00', '2026-10-31', '00:30:00'),
+('12345-PE', 2, 'Sexta-feira', '14:00:00', '18:00:00', '2026-12-31', '00:30:00'),
 ('67890-PE', 2, 'Terça-feira', '09:00:00', '15:00:00', '2026-12-31', '00:30:00');
 
 -- 23. TABELA_PRECOS
@@ -145,8 +153,10 @@ INSERT INTO TABELA_PRECOS (id_preco, codigo_TUSS_procedimento, cnpj_operadora, v
 (5, '40805018', '98.765.432/0001-11', 180.00, '2026-01-01'),
 (6, '40101029', '12.345.678/0001-99', 250.00, '2026-01-01');
 -- 24. GUIAS
-INSERT INTO GUIAS (id_guia, id_atendimento, cnpj_operadora, id_preco, competencia, valor_apresentado, valor_pago, valor_glosado) VALUES
-(1, 901, '12.345.678/0001-99', 3, '2026-11', 350.00, 300.00, 50.00),
-(2, 902, '98.765.432/0001-11', 5, '2026-11', 280.00, 280.00, 0.00),
-(3, 903, '12.345.678/0001-99', 6, '2026-09', 420.00, 340.00, 80.00);
+INSERT INTO GUIAS (id_guia, id_atendimento, cnpj_operadora, competencia, valor_apresentado, valor_pago, valor_glosado) VALUES
+(1, 901, '12.345.678/0001-99', '2026-11', 350.00, 300.00, 50.00),
+(2, 902, '98.765.432/0001-11', '2026-11', 280.00, 280.00, 0.00),
+(3, 903, '12.345.678/0001-99', '2026-09', 420.00, 340.00, 80.00),
+(4, 904, '12.345.678/0001-99', '2026-09', 300.00, 300.00, 0.00),
+(5, 907, '12.345.678/0001-99', '2026-11', 240.00, 240.00, 0.00);
 

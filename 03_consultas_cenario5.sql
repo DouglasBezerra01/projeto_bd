@@ -19,7 +19,8 @@ SELECT
     motivo_cancelamento
 FROM AGENDAMENTO
 WHERE situacao = 'Cancelado'
-  AND data LIKE '2026-11-%'
+  AND data_cancelamento >= '2026-10-01'
+  AND data_cancelamento < '2026-11-01'
 ORDER BY data ASC;
 
 -- Q03: Liste código TUSS, nome, preparo e tempo estimado dos procedimentos do tipo exame que exigem preparo do paciente.
@@ -52,7 +53,9 @@ SELECT
     matricula_medico,
     COUNT(CASE WHEN situacao = 'faltou' THEN 1 END) * 100.0 / COUNT(*) AS taxa_absenteismo_percentual
 FROM AGENDAMENTO
-WHERE data LIKE '2026-11-%'
+WHERE data >= '2026-10-01'
+  AND data < '2026-11-01'
+  AND situacao IN ('Realizado', 'faltou')
 GROUP BY matricula_medico;
 
 -- Q06: Quais médicos atendem a especialidade [Cardiologia] na unidade [código], com faixa de agenda vigente hoje?
@@ -80,13 +83,14 @@ WHERE nome_responsavel IS NOT NULL
 
 -- Q08: Quais os [10] procedimentos mais solicitados como exame em [2026]?
 SELECT 
+    p.codigo_TUSS,
     p.nome, 
     COUNT(s.codigo_TUSS_procedimento) AS total_solicitacoes
 FROM SOLICITA s
 JOIN PROCEDIMENTO_EXAME p ON s.codigo_TUSS_procedimento = p.codigo_TUSS
 WHERE s.data_solicitacao LIKE '2026-%'
-GROUP BY p.nome
-ORDER BY total_solicitacoes DESC
+GROUP BY p.codigo_TUSS, p.nome
+ORDER BY total_solicitacoes DESC, p.nome
 LIMIT 10;
 
 -- Q09: Para cada operadora e competência, mostre o valor apresentado, o valor pago, o valor glosado e o percentual de glosa.

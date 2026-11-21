@@ -78,7 +78,7 @@ CREATE TABLE PACIENTES (
     sexo VARCHAR(20),
     nome_mae VARCHAR(100),
     endereco VARCHAR(200),
-    municipio VARCHAR(100),
+    municipio VARCHAR(100) NOT NULL,
     telefone VARCHAR(20),
     nome_responsavel VARCHAR(100)
 );
@@ -94,8 +94,8 @@ CREATE TABLE PRONTUARIO (
 -- 11. Tabela EVOLUCAO
 CREATE TABLE EVOLUCAO (
     seq_evolucao INTEGER PRIMARY KEY AUTOINCREMENT,
-    numero_prontuario INTEGER,
-    matricula_profissional INTEGER,
+    id_atendimento INTEGER NOT NULL,
+    matricula_profissional INTEGER NOT NULL,
     data_hora DATETIME,
     peso DECIMAL(5,2),
     altura DECIMAL(3,2),
@@ -103,7 +103,7 @@ CREATE TABLE EVOLUCAO (
     temperatura DECIMAL(4,2),
     pressao VARCHAR(10),
     texto_evolucao TEXT,
-    FOREIGN KEY (numero_prontuario) REFERENCES PRONTUARIO (numero_prontuario),
+    FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
     FOREIGN KEY (matricula_profissional) REFERENCES PROFISSIONAIS (matricula)
 );
 
@@ -160,19 +160,20 @@ CREATE TABLE AGENDAMENTO (
     numero_sala INTEGER,
     matricula_administracao INTEGER,
     cpf_paciente VARCHAR(14),
-    matricula_medico INTEGER,
-    codigo_especialidade INTEGER,
+    matricula_medico INTEGER NOT NULL,
+    codigo_especialidade INTEGER NOT NULL,
     FOREIGN KEY (numero_sala) REFERENCES SALAS (numero_sala),
     FOREIGN KEY (matricula_administracao) REFERENCES ADMINISTRACAO (matricula_profissionais),
     FOREIGN KEY (cpf_paciente) REFERENCES PACIENTES (cpf),
     FOREIGN KEY (matricula_medico) REFERENCES MEDICO (matricula_profissionais),
-    FOREIGN KEY (codigo_especialidade) REFERENCES ESPECIALIDADES (codigo)
+    FOREIGN KEY (matricula_medico, codigo_especialidade)
+        REFERENCES MEDICO_ESPECIALIDADE (matricula_medico, codigo_especialidade)
 );
 
 -- 17. Tabela ATENDIMENTO
 CREATE TABLE ATENDIMENTO (
     id_atendimento INTEGER PRIMARY KEY,
-    id_agendamento INTEGER,
+    id_agendamento INTEGER NOT NULL,
     hora_inicio TIME,
     hora_termino TIME,
     queixa_principal TEXT,
@@ -190,7 +191,7 @@ CREATE TABLE PROCEDIMENTO_EXAME (
     preparo_exigido TEXT,
     tempo_estimado TIME,
     cod_exame_princ VARCHAR(20),
-    FOREIGN KEY (cod_exame_princ) REFERENCES PROCEDIMENTO_EXAME (codigo_TUSS
+    FOREIGN KEY (cod_exame_princ) REFERENCES PROCEDIMENTO_EXAME (codigo_TUSS)
 );
 
 -- 19. Tabela SOLICITA
@@ -247,19 +248,12 @@ CREATE TABLE AGENDAS (
 -- 23. Tabela TABELA_PRECOS
 CREATE TABLE TABELA_PRECOS (
     id_preco INTEGER PRIMARY KEY,
-    id_atendimento INTEGER NOT NULL,
-    codigo_TUSS VARCHAR(20) NOT NULL,
-    cnpj_operadora VARCHAR(18) NOT NULL,
-    id_precos INTEGER NOT NULL,
-    competencia VARCHAR(7) NOT NULL,
-    valor_apresentado DECIMAL(10, 2) NOT NULL,
-    valor_pago DECIMAL(10, 2) NOT NULL,
+    codigo_TUSS_procedimento VARCHAR(20) NOT NULL,
+    cnpj_operadora VARCHAR(18),
     valor DECIMAL(10, 2) NOT NULL,
     data_vigencia DATE NOT NULL,
-    FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
-    FOREIGN KEY (cnpj_operadora) REFERENCES OPERADORES (cnpj),
-    FOREIGN KEY (codigo_TUSS) REFERENCES PROCEDIMENTO_EXAME (codigo_TUSS),
-    FOREIGN KEY (id_precos) REFERENCES TABELA_PRECOS (id_preco)
+    FOREIGN KEY (codigo_TUSS_procedimento) REFERENCES PROCEDIMENTO_EXAME (codigo_TUSS),
+    FOREIGN KEY (cnpj_operadora) REFERENCES OPERADORES (cnpj)
 );
 
 -- 24. Tabela GUIAS
@@ -273,5 +267,4 @@ CREATE TABLE GUIAS (
     valor_glosado DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (id_atendimento) REFERENCES ATENDIMENTO (id_atendimento),
     FOREIGN KEY (cnpj_operadora) REFERENCES OPERADORES (cnpj)
-
 );

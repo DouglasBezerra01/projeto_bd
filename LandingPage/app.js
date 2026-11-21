@@ -23,7 +23,10 @@ const columnOrder = [
   'Hora término', 'CID', 'Prazo de retorno', 'Dia da semana', 'Horário de início',
   'Horário de término', 'Horário de funcionamento', 'Data de inauguração', 'Vigência',
   'Duração da consulta', 'Código', 'Código da unidade', 'Acomodação', 'Abrangência',
-  'Carência', 'CNPJ', 'Registro ANS', 'Contato', 'Detalhes', 'Informações'
+  'Carência', 'CNPJ', 'Registro ANS', 'Contato', 'Especialidade', 'Data de marcação',
+  'ID guia', 'Competência', 'Valor apresentado', 'Valor pago', 'Valor glosado',
+  'ID preço', 'Operadora', 'Valor', 'Data de vigência', 'Tempo médio (dias)',
+  'Detalhes', 'Informações'
 ];
 
 const fieldLabels = {

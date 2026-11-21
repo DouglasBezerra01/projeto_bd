@@ -113,7 +113,9 @@ def _build_records(connection):
             "Data de nascimento": row["data_nascimento"],
             "Sexo": row["sexo"],
             "Nome da mãe": row["nome_mae"],
+            "Nome do responsável": row["nome_responsavel"],
             "Endereço": row["endereco"],
+            "Município": row["municipio"],
             "Telefone": row["telefone"],
             "CNS": cns,
             "Plano": plano,
@@ -164,19 +166,7 @@ def _build_records(connection):
             "Informações": f"Telefone {row['telefone'] or ''} • Horário {row['horario_funcionamento'] or ''} • Inauguração {row['data_inauguracao'] or ''}",
         })
 
-    for row in rows("""
-        SELECT pe.*, s.id_atendimento, s.data_solicitacao, s.indicacao_clinica,
-               s.carater, s.status_exame,
-               GROUP_CONCAT(DISTINCT esp.nome) AS especialidades
-        FROM PROCEDIMENTO_EXAME pe
-        LEFT JOIN SOLICITA s ON s.codigo_TUSS_procedimento = pe.codigo_TUSS
-        LEFT JOIN ATENDIMENTO a ON a.id_atendimento = s.id_atendimento
-        LEFT JOIN AGENDAMENTO ag ON ag.id_agendamento = a.id_agendamento
-        LEFT JOIN MEDICO_ESPECIALIDADE me ON me.matricula_medico = ag.matricula_medico
-        LEFT JOIN ESPECIALIDADE esp ON esp.codigo = me.codigo_especialidade
-        GROUP BY pe.codigo_TUSS
-        ORDER BY pe.codigo_TUSS
-    """):
+    for row in rows("SELECT * FROM PROCEDIMENTO_EXAME ORDER BY codigo_TUSS"):
         add("Procedimento", {
             "Nome": row["nome"],
             "TUSS": row["codigo_TUSS"],
@@ -184,44 +174,54 @@ def _build_records(connection):
             "Preparo": row["preparo_exigido"],
             "Tempo estimado": row["tempo_estimado"],
             "Código do exame principal": row["cod_exame_princ"],
-            "ID atendimento": row["id_atendimento"],
-            "Data da solicitação": row["data_solicitacao"],
-            "Indicação clínica": row["indicacao_clinica"],
-            "Caráter": row["carater"],
-            "Status do exame": row["status_exame"],
-            "Especialidade": row["especialidades"],
             "Detalhes": f"TUSS {row['codigo_TUSS']} • {row['tipo'] or ''}",
-            "Informações": f"Preparo: {row['preparo_exigido'] or ''} • Tempo: {row['tempo_estimado'] or ''} • Atendimento: {row['id_atendimento'] or 'não solicitado'}",
+            "Informações": f"Preparo: {row['preparo_exigido'] or ''} • Tempo: {row['tempo_estimado'] or ''}",
         })
 
     for row in rows("""
-        SELECT s.*, pe.nome AS procedimento
+        SELECT s.*, pe.nome AS procedimento, a.id_agendamento,
+               ag.cpf_paciente, p.nome AS paciente,
+               prof.nome AS profissional, esp.nome AS especialidade
         FROM SOLICITA s
         LEFT JOIN PROCEDIMENTO_EXAME pe ON pe.codigo_TUSS = s.codigo_TUSS_procedimento
+        LEFT JOIN ATENDIMENTO a ON a.id_atendimento = s.id_atendimento
+        LEFT JOIN AGENDAMENTO ag ON ag.id_agendamento = a.id_agendamento
+        LEFT JOIN PACIENTES p ON p.cpf = ag.cpf_paciente
+        LEFT JOIN PROFISSIONAIS prof ON prof.matricula = ag.matricula_medico
+        LEFT JOIN ESPECIALIDADE esp ON esp.codigo = ag.codigo_especialidade
         ORDER BY s.id_atendimento, s.codigo_TUSS_procedimento
     """):
         add("Solicitação", {
             "ID atendimento": row["id_atendimento"],
+            "ID agendamento": row["id_agendamento"],
+            "Paciente": row["paciente"],
+            "CPF do paciente": row["cpf_paciente"],
+            "Profissional": row["profissional"],
             "TUSS": row["codigo_TUSS_procedimento"],
             "Procedimento": row["procedimento"],
             "Data da solicitação": row["data_solicitacao"],
             "Indicação clínica": row["indicacao_clinica"],
             "Caráter": row["carater"],
             "Status do exame": row["status_exame"],
+            "Especialidade": row["especialidade"],
         })
 
     for row in rows("""
-        SELECT ag.*, p.nome AS paciente, prof.nome AS medico, s.equipamento
+        SELECT ag.*, p.nome AS paciente, prof.nome AS medico, s.equipamento,
+               esp.nome AS especialidade
         FROM AGENDAMENTO ag
         LEFT JOIN PACIENTES p ON p.cpf = ag.cpf_paciente
         LEFT JOIN PROFISSIONAIS prof ON prof.matricula = ag.matricula_medico
         LEFT JOIN SALAS s ON s.numero_sala = ag.numero_sala
+        LEFT JOIN ESPECIALIDADE esp ON esp.codigo = ag.codigo_especialidade
         ORDER BY ag.id_agendamento
     """):
         add("Agendamento", {
             "ID agendamento": row["id_agendamento"],
+            "Data de marcação": row["data_marcacao"],
             "Paciente": row["paciente"],
             "Médico": row["medico"],
+            "Especialidade": row["especialidade"],
             "Data": row["data"],
             "Hora": row["hora"],
             "Canal": row["canal"],
@@ -238,16 +238,13 @@ def _build_records(connection):
 
     for row in rows("""
         SELECT a.*, ag.data, ag.hora, ag.cpf_paciente, p.nome AS paciente,
-               prof.nome AS profissional, m.crm,
-               GROUP_CONCAT(DISTINCT esp.nome) AS especialidades
+               prof.nome AS profissional, m.crm, esp.nome AS especialidade
         FROM ATENDIMENTO a
         LEFT JOIN AGENDAMENTO ag ON ag.id_agendamento = a.id_agendamento
         LEFT JOIN PACIENTES p ON p.cpf = ag.cpf_paciente
         LEFT JOIN PROFISSIONAIS prof ON prof.matricula = ag.matricula_medico
         LEFT JOIN MEDICO m ON m.matricula_profissionais = prof.matricula
-        LEFT JOIN MEDICO_ESPECIALIDADE me ON me.matricula_medico = m.matricula_profissionais
-        LEFT JOIN ESPECIALIDADE esp ON esp.codigo = me.codigo_especialidade
-        GROUP BY a.id_atendimento
+        LEFT JOIN ESPECIALIDADE esp ON esp.codigo = ag.codigo_especialidade
         ORDER BY a.id_atendimento
     """):
         add("Atendimento", {
@@ -262,19 +259,23 @@ def _build_records(connection):
             "Queixa principal": row["queixa_principal"],
             "CID": row["teses_diagnosticas_CID"],
             "Conduta": row["conduta"],
-            "Especialidades": row["especialidades"],
+            "Especialidade": row["especialidade"],
             "Prazo de retorno": row["prazo_retorno"],
             "Detalhes": f"Atendimento {row['id_atendimento']} • Agendamento {row['id_agendamento']}",
             "Informações": " • ".join(value for value in (
                 f"{row['hora_inicio'] or ''}–{row['hora_termino'] or ''}",
                 row["teses_diagnosticas_CID"],
-                row["especialidades"],
+                row["especialidade"],
                 f"Retorno em {row['prazo_retorno']} dias" if row["prazo_retorno"] is not None else None,
             ) if value),
         })
 
     for row in rows("""
-        SELECT a.*, p.nome AS profissional, u.nome AS unidade_nome, u.municipio
+        SELECT a.*, p.nome AS profissional, u.nome AS unidade_nome, u.municipio,
+               (SELECT GROUP_CONCAT(DISTINCT esp.nome)
+                FROM MEDICO_ESPECIALIDADE me
+                JOIN ESPECIALIDADE esp ON esp.codigo = me.codigo_especialidade
+                WHERE me.matricula_medico = m.matricula_profissionais) AS especialidades
         FROM AGENDAS a
         LEFT JOIN MEDICO m ON m.crm = a.crm_medico
         LEFT JOIN PROFISSIONAIS p ON p.matricula = m.matricula_profissionais
@@ -283,6 +284,7 @@ def _build_records(connection):
     """):
         add("Agenda", {
             "Profissional": row["profissional"],
+            "Especialidades": row["especialidades"],
             "CRM": row["crm_medico"],
             "CRM médico": row["crm_medico"],
             "Unidade": row["unidade_nome"],
@@ -297,7 +299,12 @@ def _build_records(connection):
             "Informações": f"{row['unidade_nome'] or ''} • Vigência até {row['periodo_vigencia'] or ''} • Consulta {row['duracao_consulta'] or ''}",
         })
 
-    for row in rows("SELECT * FROM PLANOS ORDER BY codigo"):
+    for row in rows("""
+        SELECT pl.*, o.razao_social AS operadora
+        FROM PLANOS pl
+        JOIN OPERADORES o ON o.cnpj = pl.cnpj_operadora
+        ORDER BY pl.codigo
+    """):
         add("Plano", {
             "Nome": row["nome"],
             "Código": row["codigo"],
@@ -306,6 +313,7 @@ def _build_records(connection):
             "Abrangência": row["abrangencia"],
             "Carência": f"{row['prazo_carencia']} dias" if row["prazo_carencia"] is not None else "",
             "Prazo de carência": row["prazo_carencia"],
+            "Operadora": row["operadora"],
             "Detalhes": f"Código {row['codigo']} • {row['tipo_acomodacao'] or ''}",
             "Informações": f"{row['abrangencia'] or ''} • Carência {row['prazo_carencia'] if row['prazo_carencia'] is not None else ''} dias",
         })
@@ -318,6 +326,48 @@ def _build_records(connection):
             "Contato": row["contato_administrativo"],
             "Detalhes": f"CNPJ {row['cnpj']} • {row['registro_ans'] or ''}",
             "Informações": f"Contato {row['contato_administrativo'] or ''}",
+        })
+
+    for row in rows("""
+        SELECT g.*, o.razao_social AS operadora, ag.id_agendamento,
+               ag.cpf_paciente, p.nome AS paciente, prof.nome AS profissional
+        FROM GUIAS g
+        LEFT JOIN OPERADORES o ON o.cnpj = g.cnpj_operadora
+        LEFT JOIN ATENDIMENTO a ON a.id_atendimento = g.id_atendimento
+        LEFT JOIN AGENDAMENTO ag ON ag.id_agendamento = a.id_agendamento
+        LEFT JOIN PACIENTES p ON p.cpf = ag.cpf_paciente
+        LEFT JOIN PROFISSIONAIS prof ON prof.matricula = ag.matricula_medico
+        ORDER BY g.id_guia
+    """):
+        add("Guia", {
+            "ID guia": row["id_guia"],
+            "ID atendimento": row["id_atendimento"],
+            "ID agendamento": row["id_agendamento"],
+            "Paciente": row["paciente"],
+            "Profissional": row["profissional"],
+            "CNPJ": row["cnpj_operadora"],
+            "Operadora": row["operadora"],
+            "Competência": row["competencia"],
+            "Valor apresentado": row["valor_apresentado"],
+            "Valor pago": row["valor_pago"],
+            "Valor glosado": row["valor_glosado"],
+        })
+
+    for row in rows("""
+        SELECT tp.*, pe.nome AS procedimento, o.razao_social AS operadora
+        FROM TABELA_PRECOS tp
+        LEFT JOIN PROCEDIMENTO_EXAME pe ON pe.codigo_TUSS = tp.codigo_TUSS_procedimento
+        LEFT JOIN OPERADORES o ON o.cnpj = tp.cnpj_operadora
+        ORDER BY tp.id_preco
+    """):
+        add("Preço", {
+            "ID preço": row["id_preco"],
+            "TUSS": row["codigo_TUSS_procedimento"],
+            "Procedimento": row["procedimento"],
+            "CNPJ": row["cnpj_operadora"],
+            "Operadora": row["operadora"] or "Atendimento particular",
+            "Valor": row["valor"],
+            "Data de vigência": row["data_vigencia"],
         })
 
     for row in rows("SELECT * FROM ESPECIALIDADE ORDER BY codigo"):
@@ -380,17 +430,21 @@ def _build_records(connection):
         })
 
     for row in rows("""
-        SELECT e.*, p.nome AS paciente, prof.nome AS profissional
+        SELECT e.*, a.id_agendamento, ag.cpf_paciente,
+               p.nome AS paciente, prof.nome AS profissional
         FROM EVOLUCAO e
-        LEFT JOIN PRONTUARIO pr ON pr.numero_prontuario = e.numero_prontuario
-        LEFT JOIN PACIENTES p ON p.cpf = pr.cpf_paciente
+        JOIN ATENDIMENTO a ON a.id_atendimento = e.id_atendimento
+        JOIN AGENDAMENTO ag ON ag.id_agendamento = a.id_agendamento
+        LEFT JOIN PACIENTES p ON p.cpf = ag.cpf_paciente
         LEFT JOIN PROFISSIONAIS prof ON prof.matricula = e.matricula_profissional
         ORDER BY e.seq_evolucao
     """):
         add("Evolução", {
             "Sequência da evolução": row["seq_evolucao"],
-            "Prontuário": row["numero_prontuario"],
+            "ID atendimento": row["id_atendimento"],
+            "ID agendamento": row["id_agendamento"],
             "Paciente": row["paciente"],
+            "CPF do paciente": row["cpf_paciente"],
             "Matrícula": row["matricula_profissional"],
             "Profissional": row["profissional"],
             "Data e hora": row["data_hora"],
@@ -399,8 +453,23 @@ def _build_records(connection):
             "Frequência cardíaca": row["frequencia_cardiaca"],
             "Temperatura": row["temperatura"],
             "Pressão arterial": row["pressao"],
-            "Detalhes": f"Prontuário {row['numero_prontuario']} • Profissional {row['matricula_profissional']}",
+            "Detalhes": f"Atendimento {row['id_atendimento']} • Profissional {row['matricula_profissional']}",
             "Informações": row["texto_evolucao"],
+        })
+
+    for row in rows("""
+        SELECT e.nome AS especialidade,
+               ROUND(AVG(JULIANDAY(ag.data) - JULIANDAY(ag.data_marcacao)), 1) AS tempo_medio_dias
+        FROM AGENDAMENTO ag
+        JOIN ESPECIALIDADE e ON e.codigo = ag.codigo_especialidade
+        WHERE ag.situacao = 'Realizado'
+        GROUP BY e.nome
+        ORDER BY e.nome
+    """):
+        add("Tempo médio por especialidade", {
+            "Especialidade": row["especialidade"],
+            "Tempo médio (dias)": row["tempo_medio_dias"],
+            "Detalhes": "Qual o tempo médio, em dias, entre a data da marcação e a data da consulta, por especialidade?",
         })
 
     return records
