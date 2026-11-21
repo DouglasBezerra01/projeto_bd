@@ -109,7 +109,7 @@ SELECT
     e.nome AS especialidade,
     ROUND(AVG(JULIANDAY(a.data) - JULIANDAY(a.data_marcacao)), 1) AS tempo_medio_dias
 FROM AGENDAMENTO a
-JOIN ESPECIALIDADE e ON me.codigo_especialidade = e.codigo
+JOIN ESPECIALIDADE e ON a.codigo_especialidade = e.codigo
 WHERE a.situacao = 'Realizado'
 GROUP BY e.nome;
 
@@ -121,7 +121,7 @@ SELECT
 FROM SOLICITA s
 JOIN ATENDIMENTO at ON s.id_atendimento = at.id_atendimento
 JOIN AGENDAMENTO a ON at.id_agendamento = a.id_agendamento
-JOIN ESPECIALIDADE e ON me.codigo_especialidade = e.codigo
+JOIN ESPECIALIDADE e ON a.codigo_especialidade = e.codigo
 WHERE s.status_exame = 'Solicitado'
 GROUP BY e.nome;
 
