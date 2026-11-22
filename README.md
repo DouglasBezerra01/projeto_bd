@@ -1,7 +1,18 @@
-# projeto_bd
-Repositório para o projeto da disciplina de Banco de Dados
+# Projeto - Banco de Dados
 
-## Executar o site
+Repositório do projeto da disciplina de Banco de Dados — Cenário 5: clínica médica.
+@Alanemartins
+@DouglasBezerra01
+@ViniciusHenrykyy
+
+## Executar usando o SQLite (by alexcvzz)
+
+1. Crie o arquivo `clinica.db`.
+2. Pressione `Ctrl + Shift + P`, digite `SQLite: Open Database` e selecione o arquivo `clinica.db`.
+3. Abra `01_criacao_cenario5.sql` e execute-o com `Ctrl + Shift + Q`.
+4. Repita o passo anterior para `02_insercao_cenario5.sql` e `03_consultas_cenario5.sql`.
+
+## Executar o Website
 
 O site consulta os registros diretamente do banco SQLite por meio de uma API local.
 Com Python 3 instalado e o arquivo `clinica.db` na raiz do projeto, execute:
